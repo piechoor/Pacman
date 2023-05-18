@@ -2,13 +2,21 @@ import javax.swing.*;
 import java.io.File;
 public class App {
 
-    App() {
+    public App() {
         JFrame frame = new JFrame("Pacman");
         setIcon(frame, "imgs/pacman_icon.png");
+        Map map = new Map();
+        frame.add(map);
+
+        frame.setSize(400,400);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+
         createUI(frame);
     }
     public static void main(String[] args) {
-        new App();
+
+        App a = new App();
     }
 
     private static void createUI(JFrame frame) {
@@ -19,16 +27,13 @@ public class App {
         panel.add(startButton);
 
         frame.add(panel);
-        frame.setSize(400,400);
         frame.setLayout(null);
-        frame.setVisible(true);
     }
 
     private static void setIcon(JFrame frame, String path) {
 
         String absolutePath = new File(path).getAbsolutePath();
         ImageIcon icon = new ImageIcon(absolutePath);
-
         frame.setIconImage(icon.getImage());
     }
 }
