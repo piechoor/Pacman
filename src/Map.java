@@ -6,8 +6,8 @@ public class Map extends JComponent {
     public Map() {}
 
     private void paintSquare(Graphics2D g2d, int posX, int posY) {
-        g2d.setColor(new Color(0,72,251));
-        g2d.fillRect(posX, posY, 30, 30);
+        g2d.setColor(new Color(65, 53, 233));
+        g2d.fillRect(posX, posY, 20, 20);
     }
     @Override
     protected void paintComponent(Graphics g) {
@@ -19,7 +19,15 @@ public class Map extends JComponent {
         g2d.setColor(Color.black);
         g2d.fillRect(0, 0, 400, 400);
 
-        paintSquare(g2d, 70,20);
+        MapObject food = new MapObject(Color.orange, 19, g2d);
+
+        for (int i = 1; i < 17; i++) {
+            for (int j = 1; j < 17; j++) {
+                if (i == 1 | i == 16 | j == 1 | j == 16)
+                    food.paintObject( 10 + 20 * i, 20 * j);
+            }
+        }
+
         g2d.dispose();
 
     }
