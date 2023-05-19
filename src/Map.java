@@ -3,31 +3,100 @@ import java.awt.*;
 
 public class Map extends JComponent {
 
-    public Map() {}
+    private final int width, height;
+    private int maxObjWidth, maxObjHeight;
 
-    private void paintSquare(Graphics2D g2d, int posX, int posY) {
-        g2d.setColor(new Color(65, 53, 233));
-        g2d.fillRect(posX, posY, 20, 20);
+    // Map representation 28x30
+    private final int[][] map =
+           {{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+            { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+            { 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1 },
+            { 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1 },
+            { 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1 },
+            { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+            { 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1 },
+            { 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1 },
+            { 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1 },
+            { 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
+            { 2, 2, 2, 2, 2, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 2, 2, 2, 2, 2 },
+            { 2, 2, 2, 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 2, 2, 2, 2, 2 },
+            { 2, 2, 2, 2, 2, 1, 0, 1, 1, 0, 1, 1, 1, 2, 2, 1, 1, 1, 0, 1, 1, 0, 1, 2, 2, 2, 2, 2 },
+            { 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 2, 2, 2, 2, 2, 2, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
+            { 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,1, 2, 2, 2, 2, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 2, 2, 2, 2, 2, 2, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
+            { 2, 2, 2, 2, 2, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 2, 2, 2, 2, 2 },
+            { 2, 2, 2, 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 2, 2, 2, 2, 2 },
+            { 2, 2, 2, 2, 2, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 2, 2, 2, 2, 2 },
+            { 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
+            { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+            { 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1 },
+            { 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1 },
+            { 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1 },
+            { 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1 },
+            { 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1 },
+            { 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1 },
+            { 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1 },
+            { 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1 },
+            { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+            { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }};
+
+
+    MapObject food, blank, wall, out;
+
+    public Map(int w, int h) {
+        width = w;
+        height = h;
     }
+
+    public void update() {
+        for (int i = 0; i < map[0].length; i++) {
+            for (int j = 0; j < map.length; j++) {
+                switch (map[j][i]) {
+                    case 0 -> blank.paintObject(i * maxObjWidth, j * maxObjHeight, false);
+                    case 1 -> wall.paintObject(i * maxObjWidth, j * maxObjHeight, false);
+                    case 2 -> out.paintObject(i * maxObjWidth, j * maxObjHeight,false);
+                    case 9 -> food.paintObject(i * maxObjWidth, j * maxObjHeight, true);
+                }
+            }
+        }
+    }
+
+
+    private void spawnFood() {
+        for (int i = 0; i < map[0].length; i++) {
+            for (int j = 0; j < map.length; j++) {
+                if (j > 8 & j < 20 & i > 6 & i < 21)  // excluding middle part
+                    continue;
+                if (j < 15 & j > 13 & (i < 6 | i > 21))  // excluding side parts
+                    continue;
+                if (map[j][i] == 0) {
+                    map[j][i] = 9;
+                }
+            }
+        }
+        update();
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
 
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
+        maxObjWidth = (int) width / map[0].length;
+        maxObjHeight = (int) height / map.length;
+
+        blank = new MapObject(new Color(0, 0, 0, 100), maxObjWidth, maxObjHeight, g2d);
+        wall = new MapObject(new Color(34, 57, 206), maxObjWidth, maxObjHeight, g2d);
+        out = new MapObject(Color.black, maxObjWidth, maxObjHeight, g2d);
+        food = new MapObject(new Color(253, 207, 165), (int) (0.2*(float) maxObjWidth), (int) (0.2*(float) maxObjHeight), g2d);
+
+
         // sets map's color
         g2d.setColor(Color.black);
-        g2d.fillRect(0, 0, 400, 400);
+        g2d.fillRect(0, 0, width, height);
 
-        MapObject food = new MapObject(Color.orange, 19, g2d);
-
-        for (int i = 1; i < 17; i++) {
-            for (int j = 1; j < 17; j++) {
-                if (i == 1 | i == 16 | j == 1 | j == 16)
-                    food.paintObject( 10 + 20 * i, 20 * j);
-            }
-        }
-
+        spawnFood();
         g2d.dispose();
 
     }
