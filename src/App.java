@@ -12,6 +12,7 @@ public class App {
     private static JFrame frame;
     private static JPanel panel;
     private static Map map;
+    private static Game game;
     private static boolean gameStarted = false;
     private static final int WINDOW_WIDTH = 650, WINDOW_HEIGHT = 650;
 
@@ -26,6 +27,7 @@ public class App {
         frame.setSize(WINDOW_WIDTH,WINDOW_HEIGHT);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
+        frame.setLocationRelativeTo(null);
 
         setIcon("imgs/pacman_icon.png");
     }
@@ -39,6 +41,8 @@ public class App {
         app.openStartScreen();
         waitForStart();
         createMap();
+        game = new Game(map, frame);
+        game.play();
     }
 
     /**
@@ -58,6 +62,7 @@ public class App {
         frame.setVisible(true);
 
     }
+
 
     /**
      * Creates game map and assures that it's displayed in the app's frame.

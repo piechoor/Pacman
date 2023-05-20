@@ -2,6 +2,7 @@ package movers;
 
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 
 /**
  * Class represents pacman - player's character
@@ -11,7 +12,6 @@ public class Player extends Mover {
         dir = Direction.WEST;
         tileX = 14;
         tileY = 23;
-
         setIcon("imgs/pacman_icon.png");
     }
 
@@ -32,8 +32,21 @@ public class Player extends Mover {
         };
 
         // transforms icon on the map
+        transform = new AffineTransform();
         transform.rotate(angle, posX+(double) icon.getIconWidth()/2, posY+(double) icon.getIconHeight()/2);
         transform.translate(posX, posY);
         g2d.drawImage(icon.getImage(), transform, null);
     }
+
+    /**
+     * Sets player's direction.
+     * @param d direction
+     */
+    public void setDirection(Direction d) {dir = d;}
+
+    /**
+     * @return Player's direction
+     */
+    public Direction getDirection() {return dir;}
+
 }
