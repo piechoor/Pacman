@@ -10,8 +10,8 @@ import java.awt.geom.AffineTransform;
 public class Player extends Mover {
     public Player() {
         dir = Direction.WEST;
-        tileX = 14;
-        tileY = 23;
+        tileX = 3;
+        tileY = 1;
         setIcon("imgs/pacman_icon.png");
     }
 

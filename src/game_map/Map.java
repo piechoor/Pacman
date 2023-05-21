@@ -140,20 +140,22 @@ public class Map extends JComponent {
     }
 
     /**
-     * Checks if the tile of given coordinates is a valid mover path.
+     * Checks if the tile of given coordinates is a tile that can be entered on.
      * @param tileX x tile coordinate
      * @param tileY y tile coordinate
-     * @return bool if the tile is a path tile
+     * @return bool if the tile is a walkable tile
      */
-    public boolean isPath(int tileX, int tileY) {
-        if (tileX < 0 | tileX > tilesWidth)
+    public boolean isWalkable(int tileX, int tileY) {
+        // Checks if the given tile is out of the map's boundaries
+        if (tileX < 0 | tileX > tilesWidth-1)
             return false;
-        if (tileY < 0 | tileY > tilesHeight)
+        if (tileY < 0 | tileY > tilesHeight-1)
             return false;
 
-        if (map[tileX][tileY] == 0)
+        if (map[tileY][tileX] == 0 | map[tileY][tileX] == 9)  //if path or food
             return true;
-        return true; //to be fixed
+
+        return false;
     }
 
     /**

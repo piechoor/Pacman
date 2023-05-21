@@ -57,19 +57,19 @@ public class Game extends JFrame implements KeyListener{
 
         switch (player.getDirection()) {
             case NORTH:
-                if (map.isPath(pos[0], pos[1]-1))
+                if (map.isWalkable(pos[0], pos[1]-1))
                     pos[1] -= 1;
                 break;
             case EAST:
-                if (map.isPath(pos[0]+1, pos[1]))
+                if (map.isWalkable(pos[0]+1, pos[1]))
                     pos[0] += 1;
                 break;
             case SOUTH:
-                if (map.isPath(pos[0], pos[1]+1))
+                if (map.isWalkable(pos[0], pos[1]+1))
                     pos[1] += 1;
                 break;
             case WEST:
-                if (map.isPath(pos[0]-1, pos[1]))
+                if (map.isWalkable(pos[0]-1, pos[1]))
                     pos[0] -= 1;
                 break;
             default:
@@ -89,7 +89,7 @@ public class Game extends JFrame implements KeyListener{
             SwingUtilities.updateComponentTreeUI(frame);
 
             try {
-                Thread.sleep(500);
+                Thread.sleep(200);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
