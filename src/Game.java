@@ -5,6 +5,7 @@ import movers.Player;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.nio.file.FileAlreadyExistsException;
 import java.util.List;
 
 
@@ -14,9 +15,11 @@ public class Game extends JFrame implements KeyListener{
     private List<Mover> movers;
     private JFrame frame;
     private int score;
+    private boolean gameFinished = false;
 
     public Game(Map game_map, JFrame game_frame){
         map = game_map;
+        score = 0;
 
         movers = map.getMovers();
         for (Mover mover : movers) { //extracts player from all movers
@@ -40,6 +43,7 @@ public class Game extends JFrame implements KeyListener{
             case 39, 68 -> player.setDirection(Mover.Direction.EAST);
             case 40, 83 -> player.setDirection(Mover.Direction.SOUTH);
             case 37, 65 -> player.setDirection(Mover.Direction.WEST);
+            case 27 -> gameFinished = true;
         }
     }
     public void moveMovers() {
@@ -54,6 +58,12 @@ public class Game extends JFrame implements KeyListener{
      */
     private boolean movePlayer() {
         int[] pos = player.getPosition();
+
+        if (map.eatFood(pos[0], pos[1]))
+            score += 1;
+        if (teleport(pos[0], pos[1], player.getDirection()))
+            return true;
+        SwingUtilities.updateComponentTreeUI(frame);
 
         switch (player.getDirection()) {
             case NORTH:
@@ -83,7 +93,8 @@ public class Game extends JFrame implements KeyListener{
      * Game loop
      */
     public void play() {
-        while (true) {
+        while (!gameFinished) {
+
             moveMovers();
             map.update();
             SwingUtilities.updateComponentTreeUI(frame);
@@ -94,6 +105,36 @@ public class Game extends JFrame implements KeyListener{
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * If the player is on specified tile the method teleports player to the other side of the map.
+     * @param posX player's x coordinate
+     * @param posY player's y coordinate
+     * @param dir player's direction
+     * @return if the player was teleported
+     */
+    private boolean teleport(int posX, int posY, Mover.Direction dir) {
+        if (posY == 14) {
+            if (posX == 0 & dir == Mover.Direction.WEST) {
+                player.setPosition(27, 14);
+                player.setDirection(Mover.Direction.WEST);
+                return true;
+            }
+            else if (posX == 27 & dir == Mover.Direction.EAST) {
+                player.setPosition(0, 14);
+                player.setDirection(Mover.Direction.EAST);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @return Player's game score
+     */
+    public int getScore() {
+        return score;
     }
 
     public void keyTyped(KeyEvent e) {}  //declaration required by "KeyListener"

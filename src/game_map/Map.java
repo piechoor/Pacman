@@ -57,6 +57,7 @@ public class Map extends JComponent {
     Player player;
     //list of ghosts
     List<Mover> movers;
+    private boolean mapInitialized = false;
 
     /**
      * Initializes map with given dimensions
@@ -109,7 +110,7 @@ public class Map extends JComponent {
                 }
             }
         }
-        update();
+        mapInitialized = true;
     }
 
     /**
@@ -121,21 +122,22 @@ public class Map extends JComponent {
 
         g2d = (Graphics2D) g;
 
-        maxObjWidth = width / tilesWidth;
-        maxObjHeight = height / tilesHeight;
-
+        if (!mapInitialized) {
+            spawnFood();
+            maxObjWidth = width / tilesWidth;
+            maxObjHeight = height / tilesHeight;
+        }
         // Creating map objects with given colors and dimensions
         path = new MapTile(new Color(0, 0, 0, 100), maxObjWidth, maxObjHeight, g2d);
         wall = new MapTile(new Color(34, 57, 206), maxObjWidth, maxObjHeight, g2d);
         out = new MapTile(Color.black, maxObjWidth, maxObjHeight, g2d);
-        food = new MapTile(new Color(253, 207, 165), (int) (0.2*(float) maxObjWidth), (int) (0.2*(float) maxObjHeight), g2d);
-
+        food = new MapTile(new Color(253, 207, 165), (int) (0.2 * (float) maxObjWidth), (int) (0.2 * (float) maxObjHeight), g2d);
 
         // Setting background color and size
         g2d.setColor(Color.black);
         g2d.fillRect(0, 0, width, height);
 
-        spawnFood();
+        update();
         g2d.dispose();  //releases surplus resources
     }
 
@@ -155,6 +157,20 @@ public class Map extends JComponent {
         if (map[tileY][tileX] == 0 | map[tileY][tileX] == 9)  //if path or food
             return true;
 
+        return false;
+    }
+
+    /**
+     * Checks if there's food on the given tile. If yes, deletes it.
+     * @param tileX x coordinate of the tile
+     * @param tileY y coordinate of the tile
+     * @return if the food was eaten
+     */
+    public boolean eatFood(int tileX, int tileY) {
+        if (map[tileY][tileX] == 9) {
+            map[tileY][tileX] = 0;
+            return true;
+        }
         return false;
     }
 

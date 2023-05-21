@@ -43,6 +43,7 @@ public class App {
         createMap();
         game = new Game(map, frame);
         game.play();
+        System.out.println("Player score: " + game.getScore());
     }
 
     /**
