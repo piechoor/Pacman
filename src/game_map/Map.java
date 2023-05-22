@@ -4,9 +4,9 @@ import movers.Mover;
 import movers.Player;
 
 import javax.swing.*;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +54,9 @@ public class Map extends JComponent {
 
 
     MapTile food, path, wall, out;  //objects displayed on map
+    ImageIcon mapImage;
+
+    AffineTransform mapTransform = new AffineTransform();
     Player player;
     //list of ghosts
     List<Mover> movers;
@@ -71,9 +74,15 @@ public class Map extends JComponent {
         tilesWidth = map[0].length;
 
         player = new Player();
-        //place to create ghosts
         movers = new ArrayList<Mover>();
         movers.add(player);
+
+        // prepares map theme
+        mapImage = new ImageIcon(new File("imgs/pacman_map.png").getAbsolutePath());
+        Image image = mapImage.getImage();  //scaling image
+        Image tmp_image = image.getScaledInstance(635, 615,  java.awt.Image.SCALE_SMOOTH);
+        mapImage = new ImageIcon(tmp_image);
+        mapTransform.translate(0, 0);
     }
 
     /**
@@ -82,12 +91,8 @@ public class Map extends JComponent {
     public void update() {
         for (int i = 0; i < tilesHeight; i++) {
             for (int j = 0; j < tilesWidth; j++) {
-                switch (map[i][j]) {
-                    case 0 -> path.paintTile(j * maxObjWidth, i * maxObjHeight, false);
-                    case 1 -> wall.paintTile(j * maxObjWidth, i * maxObjHeight, false);
-                    case 2 -> out.paintTile(j * maxObjWidth, i * maxObjHeight,false);
-                    case 9 -> food.paintTile(j * maxObjWidth, i * maxObjHeight, true);
-                }
+                if (map[i][j] == 9)
+                    food.paintTile(j * maxObjWidth, i * maxObjHeight, true);
             }
         }
 
@@ -136,6 +141,7 @@ public class Map extends JComponent {
         // Setting background color and size
         g2d.setColor(Color.black);
         g2d.fillRect(0, 0, width, height);
+        g2d.drawImage(mapImage.getImage(), mapTransform, null);  //display map theme
 
         update();
         g2d.dispose();  //releases surplus resources
