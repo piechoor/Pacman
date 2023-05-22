@@ -9,14 +9,22 @@ import java.awt.geom.AffineTransform;
  * Class represents object that can move on a map.
  */
 public class Mover {
-    protected int tileX, tileY;
+    protected int iconW,iconH;  // dimensions of mover's icon
+    protected int posX, posY; // mover's position in pixels
 
     public enum Direction {  //possible objects directions
         NORTH, WEST, SOUTH, EAST;
     }
-    AffineTransform transform = new AffineTransform();
-    protected Direction dir;
-    protected ImageIcon icon;
+    protected Direction dir;  // mover's direction
+    protected ImageIcon icon;  // mover's icon
+    AffineTransform transform = new AffineTransform();  // icon transformation
+
+
+    Mover() {} // default constructor
+    Mover(int width, int height) {
+        iconW = width;
+        iconH = height;
+    }
 
     /**
      * Paints mover on the screen
@@ -30,11 +38,29 @@ public class Mover {
     }
 
     /**
+     * Sets mover's direction.
+     * @param d direction
+     */
+    public void setDirection(Direction d) {dir = d;}
+
+    /**
+     * @return Mover's direction
+     */
+    public Direction getDirection() {return dir;}
+
+    /**
+     * @return the tile indexes on which a mover is currently on
+     */
+    public int[] getTile() {
+        return new int[] {posX/iconW, posY/iconH};
+    }
+
+    /**
      * Returns object's position.
      * @return 2-elements array with x, y coordinates
      */
     public int[] getPosition() {
-        return new int[] {tileX, tileY};
+        return new int[] {posX, posY};
     }
 
     /**
@@ -43,8 +69,18 @@ public class Mover {
      * @param y y coordinate
      */
     public void setPosition(int x, int y) {
-        tileX = x;
-        tileY = y;
+        posX = x;
+        posY = y;
+    }
+
+    /**
+     * Sets object position in pixels, but tiles ids are given.
+     * @param tileX x-th tile horizontally
+     * @param tileY y-th tile vertically
+     */
+    public void setTile(int tileX, int tileY) {
+        posX = tileX*iconW;
+        posY = tileY*iconH;
     }
 
     /**

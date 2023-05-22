@@ -5,7 +5,6 @@ import movers.Player;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.nio.file.FileAlreadyExistsException;
 import java.util.List;
 
 
@@ -57,35 +56,38 @@ public class Game extends JFrame implements KeyListener{
      * @return true if the player was moved, false otherwise
      */
     private boolean movePlayer() {
-        int[] pos = player.getPosition();
+        int[] posT = player.getTile();
 
-        if (map.eatFood(pos[0], pos[1]))
+        if (map.eatFood(posT[0], posT[1]))
             score += 1;
-        if (teleport(pos[0], pos[1], player.getDirection()))
+        if (teleport(posT[0], posT[1], player.getDirection()))
             return true;
         SwingUtilities.updateComponentTreeUI(frame);
 
         switch (player.getDirection()) {
             case NORTH:
-                if (map.isWalkable(pos[0], pos[1]-1))
-                    pos[1] -= 1;
+                if (map.isWalkable(posT[0], posT[1]-1)) {
+                    animateWalk(0,-1);
+                    player.setTile(posT[0], posT[1]-1);}
                 break;
             case EAST:
-                if (map.isWalkable(pos[0]+1, pos[1]))
-                    pos[0] += 1;
+                if (map.isWalkable(posT[0]+1, posT[1])) {
+                    animateWalk(1,0);
+                    player.setTile(posT[0]+1, posT[1]);}
                 break;
             case SOUTH:
-                if (map.isWalkable(pos[0], pos[1]+1))
-                    pos[1] += 1;
+                if (map.isWalkable(posT[0], posT[1]+1)) {
+                    animateWalk(0,1);
+                    player.setTile(posT[0], posT[1]+1);}
                 break;
             case WEST:
-                if (map.isWalkable(pos[0]-1, pos[1]))
-                    pos[0] -= 1;
+                if (map.isWalkable(posT[0]-1, posT[1])) {
+                    animateWalk(-1,0);
+                    player.setTile(posT[0]-1, posT[1]);}
                 break;
             default:
                 return false;
         }
-        player.setPosition(pos[0], pos[1]);
         return true;
     }
 
@@ -94,15 +96,39 @@ public class Game extends JFrame implements KeyListener{
      */
     public void play() {
         while (!gameFinished) {
-
             moveMovers();
             map.update();
-            SwingUtilities.updateComponentTreeUI(frame);
+        }
+    }
 
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+    /**
+     * Animates player (TODO mover) going to tile in accordance with its direction.
+     * @param hor horizontal movement identifier: 1=EAST, -1=WEST, 0=NONE
+     * @param ver vertical movement identifier: 1=SOUTH, -1=NORTH, 0=NONE
+     */
+    private void animateWalk(int hor, int ver) {
+        int[] pos = player.getPosition();
+
+        if (hor!=0) {
+            for (int i = 0; i < map.tileW; i++) {
+                player.setPosition(pos[0] + (i * hor), pos[1]);
+                try {
+                    Thread.sleep(7);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                SwingUtilities.updateComponentTreeUI(frame);
+            }
+        }
+        else if (ver!=0) {
+            for (int i = 0; i < map.tileH; i++) {
+                player.setPosition(pos[0], pos[1] + (i * ver));
+                try {
+                    Thread.sleep(7);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                SwingUtilities.updateComponentTreeUI(frame);
             }
         }
     }
@@ -117,12 +143,12 @@ public class Game extends JFrame implements KeyListener{
     private boolean teleport(int posX, int posY, Mover.Direction dir) {
         if (posY == 14) {
             if (posX == 0 & dir == Mover.Direction.WEST) {
-                player.setPosition(27, 14);
+                player.setTile(27, 14);
                 player.setDirection(Mover.Direction.WEST);
                 return true;
             }
             else if (posX == 27 & dir == Mover.Direction.EAST) {
-                player.setPosition(0, 14);
+                player.setTile(0, 14);
                 player.setDirection(Mover.Direction.EAST);
                 return true;
             }

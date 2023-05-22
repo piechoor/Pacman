@@ -16,7 +16,7 @@ import java.util.List;
 public class Map extends JComponent {
 
     private final int width, height;  //map dimensions
-    private int maxObjWidth, maxObjHeight, tilesWidth, tilesHeight;  //max object dimensions
+    private int tilesWidth, tilesHeight;  //max object dimensions
     private Graphics2D g2d;
 
     private final int[][] map =  // Represents game map [30x28]: 0=path; 1=wall; 2=outside;
@@ -55,12 +55,12 @@ public class Map extends JComponent {
 
     MapTile food, path, wall, out;  //objects displayed on map
     ImageIcon mapImage;
-
     AffineTransform mapTransform = new AffineTransform();
     Player player;
     //list of ghosts
     List<Mover> movers;
     private boolean mapInitialized = false;
+    public int tileW, tileH;
 
     /**
      * Initializes map with given dimensions
@@ -72,8 +72,10 @@ public class Map extends JComponent {
         height = h;
         tilesHeight = map.length;
         tilesWidth = map[0].length;
+        tileW = width/tilesWidth;
+        tileH = height/tilesHeight;
 
-        player = new Player();
+        player = new Player(tileW, tileH); //TODO change
         movers = new ArrayList<Mover>();
         movers.add(player);
 
@@ -92,12 +94,12 @@ public class Map extends JComponent {
         for (int i = 0; i < tilesHeight; i++) {
             for (int j = 0; j < tilesWidth; j++) {
                 if (map[i][j] == 9)
-                    food.paintTile(j * maxObjWidth, i * maxObjHeight, true);
+                    food.paintTile(j * tileW, i * tileH, true);
             }
         }
 
         int[] playerPos = player.getPosition();
-        player.paint(g2d, playerPos[0]*maxObjWidth, playerPos[1]*maxObjHeight);
+        player.paint(g2d, playerPos[0], playerPos[1]);
     }
 
     /**
@@ -127,16 +129,14 @@ public class Map extends JComponent {
 
         g2d = (Graphics2D) g;
 
-        if (!mapInitialized) {
+        if (!mapInitialized)  //TODO change location
             spawnFood();
-            maxObjWidth = width / tilesWidth;
-            maxObjHeight = height / tilesHeight;
-        }
+
         // Creating map objects with given colors and dimensions
-        path = new MapTile(new Color(0, 0, 0, 100), maxObjWidth, maxObjHeight, g2d);
-        wall = new MapTile(new Color(34, 57, 206), maxObjWidth, maxObjHeight, g2d);
-        out = new MapTile(Color.black, maxObjWidth, maxObjHeight, g2d);
-        food = new MapTile(new Color(253, 207, 165), (int) (0.2 * (float) maxObjWidth), (int) (0.2 * (float) maxObjHeight), g2d);
+        path = new MapTile(new Color(0, 0, 0, 100), tileW, tileH, g2d);
+        wall = new MapTile(new Color(34, 57, 206), tileW, tileH, g2d);
+        out = new MapTile(Color.black, tileW, tileH, g2d);
+        food = new MapTile(new Color(253, 207, 165), (int) (0.2 * (float) tileW), (int) (0.2 * (float) tileH), g2d);
 
         // Setting background color and size
         g2d.setColor(Color.black);
