@@ -2,6 +2,7 @@ package game_map;
 
 import movers.Mover;
 import movers.Player;
+import movers.Ghost;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,10 +33,10 @@ public class Map extends JComponent {
             { 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
             { 2, 2, 2, 2, 2, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 2, 2, 2, 2, 2 },
             { 2, 2, 2, 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 2, 2, 2, 2, 2 },
-            { 2, 2, 2, 2, 2, 1, 0, 1, 1, 0, 1, 1, 1, 2, 2, 1, 1, 1, 0, 1, 1, 0, 1, 2, 2, 2, 2, 2 },
-            { 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 2, 2, 2, 2, 2, 2, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
-            { 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,1, 2, 2, 2, 2, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 2, 2, 2, 2, 2, 2, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
+            { 2, 2, 2, 2, 2, 1, 0, 1, 1, 0, 1, 1, 1, 3, 3, 1, 1, 1, 0, 1, 1, 0, 1, 2, 2, 2, 2, 2 },
+            { 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
+            { 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
             { 2, 2, 2, 2, 2, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 2, 2, 2, 2, 2 },
             { 2, 2, 2, 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 2, 2, 2, 2, 2 },
             { 2, 2, 2, 2, 2, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 2, 2, 2, 2, 2 },
@@ -58,6 +59,10 @@ public class Map extends JComponent {
     AffineTransform mapTransform = new AffineTransform();
     Player player;
     //list of ghosts
+    Ghost ghost_red;
+    Ghost ghost_blue;
+    Ghost ghost_orange;
+    Ghost ghost_pink;
     List<Mover> movers;
     private boolean mapInitialized = false;
     public int tileW, tileH;
@@ -76,8 +81,16 @@ public class Map extends JComponent {
         tileH = height/tilesHeight;
 
         player = new Player(tileW, tileH); //TODO change
+        ghost_red = new Ghost(tileW, tileH, "red");
+        ghost_orange = new Ghost(tileW, tileH, "orange");
+        ghost_blue = new Ghost(tileW, tileH, "blue");
+        ghost_pink = new Ghost(tileW, tileH, "pink");
         movers = new ArrayList<Mover>();
         movers.add(player);
+        movers.add(ghost_red);
+        movers.add(ghost_orange);
+        movers.add(ghost_blue);
+        movers.add(ghost_pink);
 
         // prepares map theme
         mapImage = new ImageIcon(new File("imgs/pacman_map.png").getAbsolutePath());
@@ -100,6 +113,15 @@ public class Map extends JComponent {
 
         int[] playerPos = player.getPosition();
         player.paint(g2d, playerPos[0], playerPos[1]);
+
+        int[] ghost_redPos = ghost_red.getPosition();
+        ghost_red.paint(g2d, ghost_redPos[0], ghost_redPos[1]);
+        int[] ghost_orangePos = ghost_orange.getPosition();
+        ghost_orange.paint(g2d, ghost_orangePos[0], ghost_orangePos[1]);
+        int[] ghost_bluePos = ghost_blue.getPosition();
+        ghost_blue.paint(g2d, ghost_bluePos[0], ghost_bluePos[1]);
+        int[] ghost_pinkPos = ghost_pink.getPosition();
+        ghost_pink.paint(g2d, ghost_pinkPos[0], ghost_pinkPos[1]);
     }
 
     /**
