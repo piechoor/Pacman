@@ -1,7 +1,9 @@
 package movers;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.io.File;
 
 /**
  * Class represents pacman - player's character
@@ -31,10 +33,29 @@ public class Player extends Mover {
             case EAST -> 0.0;
         };
 
+        // scaling image (animation purpose only)
+        Image tmp_icon = icon.getImage().getScaledInstance(23, 21,  java.awt.Image.SCALE_SMOOTH);;  //scaling image
+        icon = new ImageIcon(tmp_icon);
+
         // transforms icon on the map
         transform = new AffineTransform();
         transform.rotate(angle, posX+(double) icon.getIconWidth()/2, posY+(double) icon.getIconHeight()/2);
         transform.translate(posX, posY);
         g2d.drawImage(icon.getImage(), transform, null);
+    }
+
+    public void changeIcon(String state) {
+        String absolutePath = "";
+
+        if (state == "open")
+            absolutePath = new File("imgs/pacman_icon.png").getAbsolutePath();
+        else if (state == "close")
+            absolutePath = new File("imgs/pacman_icon2.png").getAbsolutePath();
+
+        icon = new ImageIcon(absolutePath);
+
+        Image image = icon.getImage();  //scaling image
+        Image tmp_image = image.getScaledInstance(23, 21,  java.awt.Image.SCALE_SMOOTH);
+        this.icon = new ImageIcon(tmp_image);
     }
 }

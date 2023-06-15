@@ -112,6 +112,8 @@ public class Game extends JFrame implements KeyListener{
         if (hor!=0) {
             for (int i = 0; i < map.tileW; i++) {
                 player.setPosition(pos[0] + (i * hor), pos[1]);
+                if (i==0) player.changeIcon("close");
+                if (i==(int) map.tileW/2) player.changeIcon("open");
                 try {
                     Thread.sleep(7);
                 } catch (InterruptedException e) {
@@ -123,6 +125,8 @@ public class Game extends JFrame implements KeyListener{
         else if (ver!=0) {
             for (int i = 0; i < map.tileH; i++) {
                 player.setPosition(pos[0], pos[1] + (i * ver));
+                if (i==0) player.changeIcon("close");
+                if (i==(int) map.tileH/2) player.changeIcon("open");
                 try {
                     Thread.sleep(7);
                 } catch (InterruptedException e) {
