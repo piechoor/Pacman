@@ -42,15 +42,16 @@ public class App {
         waitForStart();
         createMap();
         game = new Game(map, frame);
-        game.play();
-        System.out.println("Player score: " + game.getScore());
+        int gameScore = game.play();
     }
 
     /**
      * Creates a start screen with basic information and a start button.
      */
     public static void openStartScreen() {
+//        JLabel label = new JLabel("Enter your name:");
         JButton startButton = new JButton("Start the game!");
+//        JTextField nameField = new JTextField("guest", 8);
         startButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 panel.setVisible(false);
@@ -59,6 +60,8 @@ public class App {
         });
         // The button is placed into a panel
         panel.setBounds(100,300,200,200);
+//        panel.add(label);
+//        panel.add(nameField);
         panel.add(startButton);
         frame.setVisible(true);
 

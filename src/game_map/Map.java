@@ -80,7 +80,7 @@ public class Map extends JComponent {
         tileW = width/tilesWidth;
         tileH = height/tilesHeight;
 
-        player = new Player(tileW, tileH); //TODO change
+        player = new Player(tileW, tileH);
         ghost_red = new Ghost(tileW, tileH, "red");
         ghost_orange = new Ghost(tileW, tileH, "orange");
         ghost_blue = new Ghost(tileW, tileH, "blue");
@@ -98,6 +98,7 @@ public class Map extends JComponent {
         Image tmp_image = image.getScaledInstance(635, 615,  java.awt.Image.SCALE_SMOOTH);
         mapImage = new ImageIcon(tmp_image);
         mapTransform.translate(0, 0);
+        spawnFood();
     }
 
     /**
@@ -151,9 +152,6 @@ public class Map extends JComponent {
 
         g2d = (Graphics2D) g;
 
-        if (!mapInitialized)  //TODO change location
-            spawnFood();
-
         // Creating map objects with given colors and dimensions
         path = new MapTile(new Color(0, 0, 0, 100), tileW, tileH, g2d);
         wall = new MapTile(new Color(34, 57, 206), tileW, tileH, g2d);
@@ -167,6 +165,7 @@ public class Map extends JComponent {
 
         update();
         g2d.dispose();  //releases surplus resources
+
     }
 
     /**

@@ -62,7 +62,7 @@ public class Game extends JFrame implements KeyListener{
             score += 1;
         if (teleport(posT[0], posT[1], player.getDirection()))
             return true;
-        SwingUtilities.updateComponentTreeUI(frame);
+        map.repaint();
 
         switch (player.getDirection()) {
             case NORTH:
@@ -94,15 +94,15 @@ public class Game extends JFrame implements KeyListener{
     /**
      * Game loop
      */
-    public void play() {
+    public int play() {
         while (!gameFinished) {
             moveMovers();
-            map.update();
         }
+        return score;
     }
 
     /**
-     * Animates player (TODO mover) going to tile in accordance with its direction.
+     * Animates player
      * @param hor horizontal movement identifier: 1=EAST, -1=WEST, 0=NONE
      * @param ver vertical movement identifier: 1=SOUTH, -1=NORTH, 0=NONE
      */
@@ -117,7 +117,7 @@ public class Game extends JFrame implements KeyListener{
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                SwingUtilities.updateComponentTreeUI(frame);
+                map.repaint();
             }
         }
         else if (ver!=0) {
@@ -128,7 +128,7 @@ public class Game extends JFrame implements KeyListener{
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                SwingUtilities.updateComponentTreeUI(frame);
+                map.repaint();
             }
         }
     }
@@ -154,13 +154,6 @@ public class Game extends JFrame implements KeyListener{
             }
         }
         return false;
-    }
-
-    /**
-     * @return Player's game score
-     */
-    public int getScore() {
-        return score;
     }
 
     public void keyTyped(KeyEvent e) {}  //declaration required by "KeyListener"
