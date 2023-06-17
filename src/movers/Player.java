@@ -8,7 +8,7 @@ import java.io.File;
 /**
  * Class represents pacman - player's character
  */
-public class Player extends Mover {
+public class Player extends Mover implements Runnable{
     public Player(int width, int height) {
         iconW = width;
         iconH = height;
@@ -57,5 +57,10 @@ public class Player extends Mover {
         Image image = icon.getImage();  //scaling image
         Image tmp_image = image.getScaledInstance(23, 21,  java.awt.Image.SCALE_SMOOTH);
         this.icon = new ImageIcon(tmp_image);
+    }
+
+    @Override
+    public void run() {
+        
     }
 }

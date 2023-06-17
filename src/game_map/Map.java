@@ -1,8 +1,6 @@
 package game_map;
 
-import movers.Mover;
-import movers.Player;
-import movers.Ghost;
+import movers.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,7 +18,7 @@ public class Map extends JComponent {
     private int tilesWidth, tilesHeight;  //max object dimensions
     private Graphics2D g2d;
 
-    private final int[][] map =  // Represents game map [30x28]: 0=path; 1=wall; 2=outside;
+    private final int[][] map =  // Represents game map [31x28]: 0=path; 1=wall; 2=outside, 5=pacman;
            {{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
             { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
             { 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1 },
@@ -33,7 +31,7 @@ public class Map extends JComponent {
             { 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
             { 2, 2, 2, 2, 2, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 2, 2, 2, 2, 2 },
             { 2, 2, 2, 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 2, 2, 2, 2, 2 },
-            { 2, 2, 2, 2, 2, 1, 0, 1, 1, 0, 1, 1, 1, 3, 3, 1, 1, 1, 0, 1, 1, 0, 1, 2, 2, 2, 2, 2 },
+            { 2, 2, 2, 2, 2, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 2, 2, 2, 2, 2 },
             { 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
             { 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
             { 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
@@ -59,10 +57,10 @@ public class Map extends JComponent {
     AffineTransform mapTransform = new AffineTransform();
     Player player;
     //list of ghosts
-    Ghost ghost_red;
-    Ghost ghost_blue;
-    Ghost ghost_orange;
-    Ghost ghost_pink;
+    RedGhost redGhost;
+    PinkGhost pinkGhost;
+    BlueGhost blueGhost;
+    OrangeGhost orangeGhost;
     List<Mover> movers;
     private boolean mapInitialized = false;
     public int tileW, tileH;
@@ -81,16 +79,16 @@ public class Map extends JComponent {
         tileH = height/tilesHeight;
 
         player = new Player(tileW, tileH);
-        ghost_red = new Ghost(tileW, tileH, "red");
-        ghost_orange = new Ghost(tileW, tileH, "orange");
-        ghost_blue = new Ghost(tileW, tileH, "blue");
-        ghost_pink = new Ghost(tileW, tileH, "pink");
+        redGhost = new RedGhost(tileW, tileH, player, map);
+        pinkGhost = new PinkGhost(tileW, tileH, player, map);
+        blueGhost = new BlueGhost(tileW, tileH, player, redGhost, map);
+        orangeGhost = new OrangeGhost(tileW, tileH, player, map);
         movers = new ArrayList<Mover>();
         movers.add(player);
-        movers.add(ghost_red);
-        movers.add(ghost_orange);
-        movers.add(ghost_blue);
-        movers.add(ghost_pink);
+        movers.add(redGhost);
+        movers.add(pinkGhost);
+        movers.add(blueGhost);
+        movers.add(orangeGhost);
 
         // prepares map theme
         mapImage = new ImageIcon(new File("imgs/pacman_map.png").getAbsolutePath());
@@ -114,15 +112,14 @@ public class Map extends JComponent {
 
         int[] playerPos = player.getPosition();
         player.paint(g2d, playerPos[0], playerPos[1]);
-
-        int[] ghost_redPos = ghost_red.getPosition();
-        ghost_red.paint(g2d, ghost_redPos[0], ghost_redPos[1]);
-        int[] ghost_orangePos = ghost_orange.getPosition();
-        ghost_orange.paint(g2d, ghost_orangePos[0], ghost_orangePos[1]);
-        int[] ghost_bluePos = ghost_blue.getPosition();
-        ghost_blue.paint(g2d, ghost_bluePos[0], ghost_bluePos[1]);
-        int[] ghost_pinkPos = ghost_pink.getPosition();
-        ghost_pink.paint(g2d, ghost_pinkPos[0], ghost_pinkPos[1]);
+        int[] redGhostPos = redGhost.getPosition();
+        redGhost.paint(g2d, redGhostPos[0], redGhostPos[1]);
+        int[] pinkGhostPos = pinkGhost.getPosition();
+        pinkGhost.paint(g2d, pinkGhostPos[0], pinkGhostPos[1]);
+        int[] blueGhostPos = blueGhost.getPosition();
+        blueGhost.paint(g2d, blueGhostPos[0], blueGhostPos[1]);
+        int[] orangeGhostPos = orangeGhost.getPosition();
+        orangeGhost.paint(g2d, orangeGhostPos[0], orangeGhostPos[1]);
     }
 
     /**

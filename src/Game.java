@@ -1,6 +1,8 @@
 import game_map.Map;
+import movers.Ghost;
 import movers.Mover;
 import movers.Player;
+import movers.RedGhost;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -48,6 +50,26 @@ public class Game extends JFrame implements KeyListener{
     public void moveMovers() {
         movePlayer();
         //move ghosts
+        moveGhosts();
+        map.repaint();
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean moveGhosts() {
+        for (Mover mover : movers) {
+            if (mover instanceof Ghost) {
+                Ghost ghost = (Ghost) mover;
+                int[] posT = ghost.getTile();
+                if (teleport(posT[0], posT[1], ghost.getDirection(), ghost))
+                    return true;
+                ghost.move();
+            }
+        }
+        return true;
     }
 
     /**
@@ -57,12 +79,10 @@ public class Game extends JFrame implements KeyListener{
      */
     private boolean movePlayer() {
         int[] posT = player.getTile();
-
         if (map.eatFood(posT[0], posT[1]))
             score += 1;
-        if (teleport(posT[0], posT[1], player.getDirection()))
+        if (teleport(posT[0], posT[1], player.getDirection(), player))
             return true;
-        map.repaint();
 
         switch (player.getDirection()) {
             case NORTH:
@@ -108,7 +128,6 @@ public class Game extends JFrame implements KeyListener{
      */
     private void animateWalk(int hor, int ver) {
         int[] pos = player.getPosition();
-
         if (hor!=0) {
             for (int i = 0; i < map.tileW; i++) {
                 player.setPosition(pos[0] + (i * hor), pos[1]);
@@ -144,16 +163,16 @@ public class Game extends JFrame implements KeyListener{
      * @param dir player's direction
      * @return if the player was teleported
      */
-    private boolean teleport(int posX, int posY, Mover.Direction dir) {
+    private boolean teleport(int posX, int posY, Mover.Direction dir, Mover mover) {
         if (posY == 14) {
             if (posX == 0 & dir == Mover.Direction.WEST) {
-                player.setTile(27, 14);
-                player.setDirection(Mover.Direction.WEST);
+                mover.setTile(27, 14);
+                mover.setDirection(Mover.Direction.WEST);
                 return true;
             }
             else if (posX == 27 & dir == Mover.Direction.EAST) {
-                player.setTile(0, 14);
-                player.setDirection(Mover.Direction.EAST);
+                mover.setTile(0, 14);
+                mover.setDirection(Mover.Direction.EAST);
                 return true;
             }
         }
