@@ -1,5 +1,7 @@
 package movers;
 
+import game_map.Map;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -82,6 +84,61 @@ public class Mover {
         posX = tileX*iconW;
         posY = tileY*iconH;
     }
+
+
+    /**
+     * Animates mover
+     * @param hor horizontal movement identifier: 1=EAST, -1=WEST, 0=NONE
+     * @param ver vertical movement identifier: 1=SOUTH, -1=NORTH, 0=NONE
+     */
+    public void animateWalk(int hor, int ver, Map map) {
+        int[] pos = this.getPosition();
+        if (hor!=0) {
+            for (int i = 0; i < map.tileW; i++) {
+                this.setPosition(pos[0] + (i * hor), pos[1]);
+                try {
+                    Thread.sleep(7);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                map.repaint();
+            }
+        }
+        else if (ver!=0) {
+            for (int i = 0; i < map.tileH; i++) {
+                this.setPosition(pos[0], pos[1] + (i * ver));
+                try {
+                    Thread.sleep(7);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                map.repaint();
+            }
+        }
+    }
+
+    /**
+     * If the mover is on specified tile the method teleports mover to the other side of the map.
+     * @return if the mover was teleported
+     */
+    public boolean teleport(int nextPosX, int nextPosY) {
+        if (nextPosY == 14) {
+            if (nextPosX == 0 & dir == Direction.WEST) {
+                this.setTile(27, 14);
+                this.dir = Direction.WEST;
+                System.out.print("teleport left");
+                return true;
+            }
+            else if (nextPosX == 27 & dir == Direction.EAST) {
+                this.setTile(0, 14);
+                this.dir = Direction.EAST;
+                System.out.print("teleport right");
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     /**
      * Sets mover icon to the image from the given path.

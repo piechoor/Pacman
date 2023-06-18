@@ -1,5 +1,7 @@
 package movers;
 
+import game_map.Map;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -42,6 +44,84 @@ public class Player extends Mover implements Runnable{
         transform.rotate(angle, posX+(double) icon.getIconWidth()/2, posY+(double) icon.getIconHeight()/2);
         transform.translate(posX, posY);
         g2d.drawImage(icon.getImage(), transform, null);
+    }
+
+
+    /**
+     * Moves player according to its direction. If the tile chosen to
+     * be moved on isn't a path method changes nothing.
+     * @return true if the player was moved, false otherwise
+     */
+    public boolean movePlayer(Map map) {
+        int score = 0;
+        int[] posT = this.getTile();
+        if (map.eatFood(posT[0], posT[1]))
+            score += 1;
+        if (this.teleport(posT[0], posT[1]))
+            return true;
+
+        switch (this.getDirection()) {
+            case NORTH:
+                if (map.isWalkable(posT[0], posT[1]-1)) {
+                    this.animateWalk(0,-1, map);
+                    this.setTile(posT[0], posT[1]-1);}
+                break;
+            case EAST:
+                if (map.isWalkable(posT[0]+1, posT[1])) {
+                    this.animateWalk(1,0, map);
+                    this.setTile(posT[0]+1, posT[1]);}
+                break;
+            case SOUTH:
+                if (map.isWalkable(posT[0], posT[1]+1)) {
+                    this.animateWalk(0,1, map);
+                    this.setTile(posT[0], posT[1]+1);}
+                break;
+            case WEST:
+                if (map.isWalkable(posT[0]-1, posT[1])) {
+                    this.animateWalk(-1,0, map);
+                    this.setTile(posT[0]-1, posT[1]);}
+                break;
+            default:
+                return false;
+        }
+        return true;
+    }
+
+
+    /**
+     * Animates player
+     * @param hor horizontal movement identifier: 1=EAST, -1=WEST, 0=NONE
+     * @param ver vertical movement identifier: 1=SOUTH, -1=NORTH, 0=NONE
+     */
+    @Override
+    public void animateWalk(int hor, int ver, Map map) {
+        int[] pos = this.getPosition();
+        if (hor!=0) {
+            for (int i = 0; i < map.tileW; i++) {
+                this.setPosition(pos[0] + (i * hor), pos[1]);
+                if (i==0) this.changeIcon("close");
+                if (i==(int) map.tileW/2) this.changeIcon("open");
+                try {
+                    Thread.sleep(7);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                map.repaint();
+            }
+        }
+        else if (ver!=0) {
+            for (int i = 0; i < map.tileH; i++) {
+                this.setPosition(pos[0], pos[1] + (i * ver));
+                if (i==0) this.changeIcon("close");
+                if (i==(int) map.tileW/2) this.changeIcon("open");
+                try {
+                    Thread.sleep(7);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                map.repaint();
+            }
+        }
     }
 
     public void changeIcon(String state) {
