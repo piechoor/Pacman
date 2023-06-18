@@ -10,7 +10,8 @@ import java.io.File;
 /**
  * Class represents pacman - player's character
  */
-public class Player extends Mover implements Runnable{
+public class Player extends Mover{
+    protected Map map;
     public Player(int width, int height) {
         iconW = width;
         iconH = height;
@@ -18,7 +19,9 @@ public class Player extends Mover implements Runnable{
         setTile(14,23);
         setIcon("imgs/pacman_icon.png");
     }
-
+    public void setMap(Map map) {
+        this.map = map;
+    }
     /**
      * Paints player on the screen with proper rotation.
      * @param g2d graphics 2D
@@ -52,13 +55,14 @@ public class Player extends Mover implements Runnable{
      * be moved on isn't a path method changes nothing.
      * @return true if the player was moved, false otherwise
      */
-    public boolean movePlayer(Map map) {
+    @Override
+    public void move() {
         int score = 0;
         int[] posT = this.getTile();
         if (map.eatFood(posT[0], posT[1]))
             score += 1;
         if (this.teleport(posT[0], posT[1]))
-            return true;
+            return;
 
         switch (this.getDirection()) {
             case NORTH:
@@ -81,10 +85,7 @@ public class Player extends Mover implements Runnable{
                     this.animateWalk(-1,0, map);
                     this.setTile(posT[0]-1, posT[1]);}
                 break;
-            default:
-                return false;
         }
-        return true;
     }
 
 
@@ -139,8 +140,4 @@ public class Player extends Mover implements Runnable{
         this.icon = new ImageIcon(tmp_image);
     }
 
-    @Override
-    public void run() {
-        
-    }
 }

@@ -1,5 +1,7 @@
 package movers;
 
+import game_map.Map;
+
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
@@ -12,20 +14,22 @@ public abstract class Ghost extends Mover {
     protected static final int MAP_WIDTH = 28;
     protected static final int MAP_HEIGHT = 31;
     protected Player player;
-    protected int[][] map;
+    protected Map map;
     protected int[] Target;
 
     protected boolean inHouse = true;
 
-    public Ghost(int width, int height, Player player, int[][] map) {
+    public Ghost(int width, int height, Player player) {
         iconW = width;
         iconH = height;
         this.player = player;
-        this.map = map;
+        //this.map = map;
         dir = Direction.NORTH;
         this.Target = player.getTile();
     }
-
+    public void setMap(Map map) {
+        this.map = map;
+    }
     protected abstract void updateTarget();
     protected abstract void updateScaredModeTarget();
     protected void setTarget(int[] target) {
@@ -34,7 +38,9 @@ public abstract class Ghost extends Mover {
     protected void setScaredTarget(int[] ScaredTarget) {
         this.Target = ScaredTarget;
     }
-    public void move() {
+    public synchronized void move() {
+        if (teleport(this.getTile()[0], this.getTile()[1]))
+            return;
         int[] currentTile = getTile();
         if (isIntersection(currentTile)) {
             Direction newDirection = chooseDirection(currentTile);
@@ -43,7 +49,7 @@ public abstract class Ghost extends Mover {
         moveDirection();
 
     }
-    private boolean isIntersection(int[] tile) {
+    private synchronized boolean isIntersection(int[] tile) {
         int upTile = tile[1] - 1;
         int downTile = tile[1] + 1;
         int leftTile = tile[0] - 1;
@@ -67,11 +73,11 @@ public abstract class Ghost extends Mover {
         }
         return validDirections >= 3;
     }
-    private boolean isValidTile(int row, int column) {
-        return row >= 0 && row < MAP_HEIGHT && column < MAP_WIDTH  && column >= 0 && map[row][column] != 1;
+    private synchronized boolean isValidTile(int row, int column) {
+        return row >= 0 && row < MAP_HEIGHT && column < MAP_WIDTH  && column >= 0 && map.getMap()[row][column] != 1;
     }
 
-    private Direction chooseDirection(int[] tile) {
+    private synchronized Direction chooseDirection(int[] tile) {
         List<Direction> directions = new ArrayList<>();
         Direction currentDirection = getDirection();
         Direction oppositeDirection = getOppositeDirection(currentDirection);
@@ -118,7 +124,7 @@ public abstract class Ghost extends Mover {
         return best;
     }
 
-    private int[] getTileInDirection(int[] tile, Direction direction) {
+    private synchronized int[] getTileInDirection(int[] tile, Direction direction) {
         int[] nextTile = tile.clone();
         switch (direction) {
             case NORTH -> {
@@ -141,13 +147,13 @@ public abstract class Ghost extends Mover {
         return nextTile;
     }
 
-    protected int getDistance(int[] tile1, int[] tile2) {
+    protected synchronized int getDistance(int[] tile1, int[] tile2) {
         int dx = tile1[0] - tile2[0];
         int dy = tile1[1] - tile2[1];
         return dx * dx + dy * dy;
     }
 
-    private Direction getOppositeDirection(Direction current) {
+    private synchronized Direction getOppositeDirection(Direction current) {
         switch (current) {
             case NORTH -> {
                 return Direction.SOUTH;
@@ -167,31 +173,39 @@ public abstract class Ghost extends Mover {
         }
     }
 
-    private void moveDirection() {
-        int[] position = getPosition();
+    private synchronized void moveDirection() {
+        int[] position = getTile();
 
         switch (getDirection()) {
             case NORTH -> {
-                position[1] -= iconH;
+                /*position[1] -= iconH;*/
+                animateWalk(0, -1, map);
+                this.setTile(position[0], position[1] - 1);
                 break;
             }
             case SOUTH -> {
-                position[1] += iconH;
+                /*position[1] += iconH;*/
+                animateWalk(0, 1, map);
+                this.setTile(position[0], position[1] + 1);
                 break;
             }
             case WEST -> {
-                position[0] -= iconW;
+                /*position[0] -= iconW;*/
+                animateWalk(-1, 0, map);
+                this.setTile(position[0] - 1, position[1]);
                 break;
             }
             case EAST -> {
-                position[0] += iconW;
+                /*position[0] += iconW;*/
+                animateWalk(1, 0, map);
+                this.setTile(position[0] + 1, position[1]);
                 break;
             }
         }
-        setPosition(position[0], position[1]);
+        //setPosition(position[0], position[1]);
     }
 
-    protected int[] getTileInFrontOfPlayer(int[] playerTile, Direction playerDir, int dist) {
+    protected synchronized int[] getTileInFrontOfPlayer(int[] playerTile, Direction playerDir, int dist) {
         int[] targetTile = playerTile.clone();
         switch (playerDir) {
             case NORTH -> {

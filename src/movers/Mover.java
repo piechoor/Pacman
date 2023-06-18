@@ -10,7 +10,7 @@ import java.awt.geom.AffineTransform;
 /**
  * Class represents object that can move on a map.
  */
-public class Mover {
+public abstract class Mover implements Runnable{
     protected int iconW,iconH;  // dimensions of mover's icon
     protected int posX, posY; // mover's position in pixels
 
@@ -34,7 +34,7 @@ public class Mover {
      * @param posX x position
      * @param posY y position
      */
-    public void paint(Graphics2D g2d, int posX, int posY) {
+    public synchronized void paint(Graphics2D g2d, int posX, int posY) {
         transform.translate(posX, posY);
         g2d.drawImage(icon.getImage(), transform, null);
     }
@@ -43,7 +43,7 @@ public class Mover {
      * Sets mover's direction.
      * @param d direction
      */
-    public void setDirection(Direction d) {dir = d;}
+    public synchronized void setDirection(Direction d) {dir = d;}
 
     /**
      * @return Mover's direction
@@ -70,7 +70,7 @@ public class Mover {
      * @param x x coordinate
      * @param y y coordinate
      */
-    public void setPosition(int x, int y) {
+    public synchronized void setPosition(int x, int y) {
         posX = x;
         posY = y;
     }
@@ -80,7 +80,7 @@ public class Mover {
      * @param tileX x-th tile horizontally
      * @param tileY y-th tile vertically
      */
-    public void setTile(int tileX, int tileY) {
+    public synchronized void setTile(int tileX, int tileY) {
         posX = tileX*iconW;
         posY = tileY*iconH;
     }
@@ -91,13 +91,13 @@ public class Mover {
      * @param hor horizontal movement identifier: 1=EAST, -1=WEST, 0=NONE
      * @param ver vertical movement identifier: 1=SOUTH, -1=NORTH, 0=NONE
      */
-    public void animateWalk(int hor, int ver, Map map) {
+    public synchronized void animateWalk(int hor, int ver, Map map) {
         int[] pos = this.getPosition();
         if (hor!=0) {
             for (int i = 0; i < map.tileW; i++) {
                 this.setPosition(pos[0] + (i * hor), pos[1]);
                 try {
-                    Thread.sleep(7);
+                    Thread.sleep(8);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -108,7 +108,7 @@ public class Mover {
             for (int i = 0; i < map.tileH; i++) {
                 this.setPosition(pos[0], pos[1] + (i * ver));
                 try {
-                    Thread.sleep(7);
+                    Thread.sleep(8);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -144,7 +144,7 @@ public class Mover {
      * Sets mover icon to the image from the given path.
      * @param path relative path to file
      */
-    protected void setIcon(String path) {
+    protected synchronized void setIcon(String path) {
         String absolutePath = new File(path).getAbsolutePath();
         icon = new ImageIcon(absolutePath);
 
@@ -152,4 +152,12 @@ public class Mover {
         Image tmp_image = image.getScaledInstance(23, 21,  java.awt.Image.SCALE_SMOOTH);
         icon = new ImageIcon(tmp_image);
     }
+
+    @Override
+    public void run() {
+        while (true) {
+            move();
+        }
+    }
+    protected abstract void move();
 }

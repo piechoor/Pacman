@@ -7,6 +7,7 @@ import movers.RedGhost;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -48,15 +49,10 @@ public class Game extends JFrame implements KeyListener{
         }
     }
     public void moveMovers() {
-        player.movePlayer(map);
+        player.move();
         //move ghosts
         moveGhosts();
         map.repaint();
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     private boolean moveGhosts() {
@@ -76,8 +72,22 @@ public class Game extends JFrame implements KeyListener{
      * Game loop
      */
     public int play() {
+        List<Thread> threads = new ArrayList<>();
+        for (Mover mover : movers) {
+            if (mover instanceof Ghost) {
+                Ghost ghost = (Ghost) mover;
+                ghost.setMap(map);
+            }
+            if (mover instanceof Player) {
+                Player player = (Player) mover;
+                player.setMap(map);
+            }
+            Thread thread = new Thread(mover);
+            threads.add(thread);
+            thread.start();
+        }
         while (!gameFinished) {
-            moveMovers();
+            //moveMovers();
         }
         return score;
     }

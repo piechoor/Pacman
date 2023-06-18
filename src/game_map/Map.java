@@ -55,9 +55,9 @@ public class Map extends JComponent {
     MapTile food, path, wall, out;  //objects displayed on map
     ImageIcon mapImage;
     AffineTransform mapTransform = new AffineTransform();
-    Player player;
+    volatile Player player;
     //list of ghosts
-    RedGhost redGhost;
+    volatile RedGhost redGhost;
     PinkGhost pinkGhost;
     BlueGhost blueGhost;
     OrangeGhost orangeGhost;
@@ -79,10 +79,10 @@ public class Map extends JComponent {
         tileH = height/tilesHeight;
 
         player = new Player(tileW, tileH);
-        redGhost = new RedGhost(tileW, tileH, player, map);
-        pinkGhost = new PinkGhost(tileW, tileH, player, map);
-        blueGhost = new BlueGhost(tileW, tileH, player, redGhost, map);
-        orangeGhost = new OrangeGhost(tileW, tileH, player, map);
+        redGhost = new RedGhost(tileW, tileH, player);
+        pinkGhost = new PinkGhost(tileW, tileH, player);
+        blueGhost = new BlueGhost(tileW, tileH, player, redGhost);
+        orangeGhost = new OrangeGhost(tileW, tileH, player);
         movers = new ArrayList<Mover>();
         movers.add(player);
         movers.add(redGhost);
@@ -204,6 +204,10 @@ public class Map extends JComponent {
      */
     public List<Mover> getMovers() {
         return movers;
+    }
+
+    public int[][] getMap() {
+        return this.map;
     }
 
 }

@@ -3,10 +3,10 @@ package movers;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
-public class BlueGhost extends Ghost implements Runnable{
+public class BlueGhost extends Ghost{
     RedGhost redGhost;
-    public BlueGhost(int width, int height, Player player, RedGhost redGhost, int[][] map) {
-        super(width, height, player, map);
+    public BlueGhost(int width, int height, Player player, RedGhost redGhost) {
+        super(width, height, player);
         setIcon("imgs/ghost_blue.png");
         setTile(16, 11);
         dir = Direction.WEST;
@@ -59,9 +59,5 @@ public class BlueGhost extends Ghost implements Runnable{
         return  targetTile;
     }
 
-    @Override
-    public void run() {
-
-    }
 }
 

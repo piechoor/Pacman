@@ -1,11 +1,13 @@
 package movers;
 
+import game_map.Map;
+
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
-public class RedGhost extends Ghost implements Runnable {
-    public RedGhost(int width, int height, Player player, int[][] map) {
-        super(width, height, player, map);
+public class RedGhost extends Ghost {
+    public RedGhost(int width, int height, Player player) {
+        super(width, height, player);
         setIcon("imgs/ghost_red.png");
         setTile(15, 11);
         dir = Direction.WEST;
@@ -46,8 +48,4 @@ public class RedGhost extends Ghost implements Runnable {
         g2d.drawImage(icon.getImage(), transform, null);
     }
 
-    @Override
-    public void run() {
-        move();
-    }
 }

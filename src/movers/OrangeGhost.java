@@ -3,9 +3,9 @@ package movers;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
-public class OrangeGhost extends Ghost implements Runnable{
-    public OrangeGhost(int width, int height, Player player, int[][] map) {
-        super(width, height, player, map);
+public class OrangeGhost extends Ghost{
+    public OrangeGhost(int width, int height, Player player) {
+        super(width, height, player);
         setIcon("imgs/ghost_orange.png");
         setTile(13, 11);
         dir = Direction.WEST;
@@ -51,8 +51,4 @@ public class OrangeGhost extends Ghost implements Runnable{
         g2d.drawImage(icon.getImage(), transform, null);
     }
 
-    @Override
-    public void run() {
-
-    }
 }
