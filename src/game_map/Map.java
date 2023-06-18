@@ -209,5 +209,15 @@ public class Map extends JComponent {
     public int[][] getMap() {
         return this.map;
     }
+    public boolean allFoodEaten() {
+        for (int i = 0; i < tilesHeight; i++) {
+            for (int j = 0; j < tilesWidth; j++) {
+                if (map[i][j] == 9) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
 }

@@ -7,7 +7,7 @@ public class OrangeGhost extends Ghost{
     public OrangeGhost(int width, int height, Player player) {
         super(width, height, player);
         setIcon("imgs/ghost_orange.png");
-        setTile(13, 11);
+        setTile(11, 13);
         dir = Direction.WEST;
     }
 

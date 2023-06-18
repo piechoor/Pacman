@@ -9,7 +9,7 @@ public class RedGhost extends Ghost {
     public RedGhost(int width, int height, Player player) {
         super(width, height, player);
         setIcon("imgs/ghost_red.png");
-        setTile(15, 11);
+        setTile(15, 13);
         dir = Direction.WEST;
     }
 

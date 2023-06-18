@@ -7,7 +7,7 @@ public class PinkGhost extends Ghost {
     public PinkGhost(int width, int height, Player player) {
         super(width, height, player);
         setIcon("imgs/ghost_pink.png");
-        setTile(14, 11);
+        setTile(15, 14);
         dir = Direction.WEST;
     }
 

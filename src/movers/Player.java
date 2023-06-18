@@ -12,6 +12,7 @@ import java.io.File;
  */
 public class Player extends Mover{
     protected Map map;
+    private int score = 0;
     public Player(int width, int height) {
         iconW = width;
         iconH = height;
@@ -57,8 +58,7 @@ public class Player extends Mover{
      */
     @Override
     public void move() {
-        System.out.print("");
-        int score = 0;
+        //System.out.print("");
         int[] posT = this.getTile();
         if (map.eatFood(posT[0], posT[1]))
             score += 1;
@@ -140,5 +140,7 @@ public class Player extends Mover{
         Image tmp_image = image.getScaledInstance(23, 21,  java.awt.Image.SCALE_SMOOTH);
         this.icon = new ImageIcon(tmp_image);
     }
-
+    public int getScore() {
+        return score;
+    }
 }

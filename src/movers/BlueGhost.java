@@ -8,7 +8,7 @@ public class BlueGhost extends Ghost{
     public BlueGhost(int width, int height, Player player, RedGhost redGhost) {
         super(width, height, player);
         setIcon("imgs/ghost_blue.png");
-        setTile(16, 11);
+        setTile(11, 14);
         dir = Direction.WEST;
         this.redGhost = redGhost;
     }

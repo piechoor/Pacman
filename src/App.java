@@ -3,6 +3,11 @@ import game_map.Map;
 import javax.swing.*;
 import java.io.File;
 import java.awt.event.*;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * Main program's class managing overall app functionalities.
@@ -13,6 +18,7 @@ public class App {
     private static JPanel panel;
     private static Map map;
     private static Game game;
+    private static String filename = "score.txt";
     private static boolean gameStarted = false;
     private static final int WINDOW_WIDTH = 650, WINDOW_HEIGHT = 650;
 
@@ -35,7 +41,7 @@ public class App {
     /**
      * Program starts here:
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         App app = new App();
         app.openStartScreen();
@@ -43,6 +49,14 @@ public class App {
         createMap();
         game = new Game(map, frame);
         int gameScore = game.play();
+        try {
+           FileWriter wr = new FileWriter(filename, true);
+           wr.write(Integer.toString(gameScore));
+           wr.write(System.lineSeparator());
+           wr.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

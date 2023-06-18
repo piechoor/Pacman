@@ -17,7 +17,7 @@ public class Game extends JFrame implements KeyListener{
     private List<Mover> movers;
     private JFrame frame;
     private int score;
-    private boolean gameFinished = false;
+    private volatile boolean gameFinished = false;
 
     public Game(Map game_map, JFrame game_frame){
         map = game_map;
@@ -48,7 +48,7 @@ public class Game extends JFrame implements KeyListener{
             case 27 -> gameFinished = true;
         }
     }
-    public void moveMovers() {
+   /*public void moveMovers() {
         player.move();
         //move ghosts
         moveGhosts();
@@ -66,7 +66,7 @@ public class Game extends JFrame implements KeyListener{
             }
         }
         return true;
-    }
+    }*/
 
     /**
      * Game loop
@@ -85,8 +85,10 @@ public class Game extends JFrame implements KeyListener{
         }
         for (Mover mover: movers) {
             Thread thread = new Thread(() -> {
-               while (!isCollision()) {
+               while (!gameFinished) {
                    mover.move();
+                   isCollision();
+                   allFoodEaten();
                }
 
             });
@@ -101,18 +103,22 @@ public class Game extends JFrame implements KeyListener{
                 e.printStackTrace();
             }
         }
-        return score;
+        return player.getScore();
     }
 
-    private boolean isCollision() {
+    private void isCollision() {
         for (Mover mover : movers) {
             if (mover instanceof Ghost) {
                 Ghost ghost = (Ghost) mover;
                 if (player.getTile()[0] == ghost.getTile()[0] && player.getTile()[1] == ghost.getTile()[1])
-                    return true;
+                    gameFinished = true;
             }
         }
-        return false;
+    }
+
+    private void allFoodEaten() {
+        if (map.allFoodEaten())
+            gameFinished = true;
     }
 
     public void keyTyped(KeyEvent e) {}  //declaration required by "KeyListener"
