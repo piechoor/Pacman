@@ -57,6 +57,7 @@ public class Player extends Mover{
      */
     @Override
     public void move() {
+        System.out.print("");
         int score = 0;
         int[] posT = this.getTile();
         if (map.eatFood(posT[0], posT[1]))
@@ -103,7 +104,7 @@ public class Player extends Mover{
                 if (i==0) this.changeIcon("close");
                 if (i==(int) map.tileW/2) this.changeIcon("open");
                 try {
-                    Thread.sleep(7);
+                    Thread.sleep(8);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -116,7 +117,7 @@ public class Player extends Mover{
                 if (i==0) this.changeIcon("close");
                 if (i==(int) map.tileW/2) this.changeIcon("open");
                 try {
-                    Thread.sleep(7);
+                    Thread.sleep(8);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

@@ -155,9 +155,7 @@ public abstract class Mover implements Runnable{
 
     @Override
     public void run() {
-        while (true) {
-            move();
-        }
+        move();
     }
-    protected abstract void move();
+    public abstract void move();
 }

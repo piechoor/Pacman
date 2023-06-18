@@ -82,14 +82,37 @@ public class Game extends JFrame implements KeyListener{
                 Player player = (Player) mover;
                 player.setMap(map);
             }
-            Thread thread = new Thread(mover);
+        }
+        for (Mover mover: movers) {
+            Thread thread = new Thread(() -> {
+               while (!isCollision()) {
+                   mover.move();
+               }
+
+            });
             threads.add(thread);
             thread.start();
         }
-        while (!gameFinished) {
-            //moveMovers();
+        for (Thread thread : threads) {
+            try {
+                thread.join();
+            }
+            catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         return score;
+    }
+
+    private boolean isCollision() {
+        for (Mover mover : movers) {
+            if (mover instanceof Ghost) {
+                Ghost ghost = (Ghost) mover;
+                if (player.getTile()[0] == ghost.getTile()[0] && player.getTile()[1] == ghost.getTile()[1])
+                    return true;
+            }
+        }
+        return false;
     }
 
     public void keyTyped(KeyEvent e) {}  //declaration required by "KeyListener"

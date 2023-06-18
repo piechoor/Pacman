@@ -47,5 +47,4 @@ public class RedGhost extends Ghost {
         transform.translate(posX, posY);
         g2d.drawImage(icon.getImage(), transform, null);
     }
-
 }
