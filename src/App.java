@@ -1,13 +1,18 @@
 import game_map.Map;
 
 import javax.swing.*;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.awt.event.*;
+
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Main program's class managing overall app functionalities.
@@ -18,7 +23,7 @@ public class App {
     private static JPanel panel;
     private static Map map;
     private static Game game;
-    private static String filename = "score.txt";
+    private static String scoresFile = "scores.txt";
     private static boolean gameStarted = false;
     private static final int WINDOW_WIDTH = 650, WINDOW_HEIGHT = 650;
 
@@ -41,7 +46,7 @@ public class App {
     /**
      * Program starts here:
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
         App app = new App();
         app.openStartScreen();
@@ -49,20 +54,14 @@ public class App {
         createMap();
         game = new Game(map, frame);
         int gameScore = game.play();
-        try {
-           FileWriter wr = new FileWriter(filename, true);
-           wr.write(Integer.toString(gameScore));
-           wr.write(System.lineSeparator());
-           wr.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        writeScore(gameScore, "Guest");
+        openEndScreen();
     }
 
     /**
      * Creates a start screen with basic information and a start button.
      */
-    public static void openStartScreen() {
+    private static void openStartScreen() {
 //        JLabel label = new JLabel("Enter your name:");
         JButton startButton = new JButton("Start the game!");
 //        JTextField nameField = new JTextField("guest", 8);
@@ -81,6 +80,9 @@ public class App {
 
     }
 
+    private static void openEndScreen() {
+        panel.setVisible(false);
+    }
 
     /**
      * Creates game map and assures that it's displayed in the app's frame.
@@ -112,6 +114,27 @@ public class App {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private static void writeScore(int score, String player) {
+
+        String playerScore = score + " " + player;
+
+        try {
+            Path file = Paths.get(scoresFile);
+
+            List<String> lines = Files.readAllLines(file);
+            lines.add(playerScore);
+
+            List<String> sortedLines = lines.stream()
+                    .sorted(Comparator.comparingInt(line -> -Integer.parseInt(line.split(" ")[0])))
+                    .limit(10)
+                    .toList();
+            Files.write(file, sortedLines);
+
+        } catch (IOException e) {
+            System.err.println("Error reading/writing the file: " + e.getMessage());
         }
     }
 }
