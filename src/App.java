@@ -1,6 +1,7 @@
 import game_map.Map;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.awt.event.*;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,6 +58,11 @@ public class App {
         int gameScore = game.play();
         writeScore(gameScore, "Guest");
         openEndScreen();
+        try {
+            Thread.sleep(30000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -81,7 +88,35 @@ public class App {
     }
 
     private static void openEndScreen() {
-        panel.setVisible(false);
+        frame.remove(map);
+        frame.repaint();
+
+        ImageIcon gameOver = new ImageIcon(new File("imgs/game_over.png").getAbsolutePath());
+        Image image = gameOver.getImage();
+        Image tmp_image = image.getScaledInstance(400, 200, java.awt.Image.SCALE_SMOOTH);
+        gameOver = new ImageIcon(tmp_image);
+        JLabel label = new JLabel(gameOver);
+        label.setBounds((WINDOW_WIDTH - 400) / 2, 0, 400, 200);
+
+        int scoresW = WINDOW_WIDTH/4, scoresH = WINDOW_HEIGHT/2;
+        JTextArea scoresList = new JTextArea();
+        scoresList.setEditable(false);
+        scoresList.setFont(new Font("ITC Avant Garde Gothic", Font.BOLD, 20));
+        scoresList.setBounds((WINDOW_WIDTH-scoresW)/2, 3*(WINDOW_HEIGHT-scoresH)/4, scoresW, scoresH);
+        scoresList.setBackground(new Color(0, 0, 0, 0));
+        scoresList.setForeground(Color.WHITE);
+
+        List<String> strings = readScores();
+        scoresList.append("Highest scores: \n\n");
+        for (String str : strings) {
+            scoresList.append(str + "\n");
+        }
+
+        frame.getContentPane().setLayout(null);
+        frame.getContentPane().setBackground(Color.BLACK);
+        frame.getContentPane().add(label);
+        frame.getContentPane().add(scoresList);
+        frame.setVisible(true);
     }
 
     /**
@@ -136,5 +171,22 @@ public class App {
         } catch (IOException e) {
             System.err.println("Error reading/writing the file: " + e.getMessage());
         }
+    }
+
+    private static List<String> readScores() {
+        List<String> scores = new ArrayList<>();
+        try {
+            Path path = Paths.get(scoresFile);
+            List<String> lines = Files.readAllLines(path);
+
+            for (int i = 0; i < lines.size(); i++) {
+                String line = lines.get(i);
+                String[] elements = line.split(" ");
+                scores.add((i + 1) + ". " + elements[1] + ", " + elements[0]);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return scores;
     }
 }
