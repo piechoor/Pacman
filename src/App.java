@@ -26,6 +26,7 @@ public class App {
     private static Map map;
     private static Game game;
     private static String scoresFile = "scores.txt";
+    private static String playername = "Guest";
     private static boolean gameStarted = false;
     private static final int WINDOW_WIDTH = 650, WINDOW_HEIGHT = 650;
 
@@ -56,7 +57,7 @@ public class App {
         createMap();
         game = new Game(map, frame);
         int gameScore = game.play();
-        writeScore(gameScore, "Guest");
+        writeScore(gameScore, playername);
         openEndScreen();
         try {
             Thread.sleep(30000);
@@ -69,20 +70,37 @@ public class App {
      * Creates a start screen with basic information and a start button.
      */
     private static void openStartScreen() {
-//        JLabel label = new JLabel("Enter your name:");
+        JLabel nameInfo = new JLabel("Enter your name:");
+        nameInfo.setForeground(Color.WHITE);
         JButton startButton = new JButton("Start the game!");
-//        JTextField nameField = new JTextField("guest", 8);
+        JTextField nameField = new JTextField("guest", 8);
+        ImageIcon logo = new ImageIcon(new File("imgs/pacman_logo.png").getAbsolutePath());
+
+        Image image = logo.getImage();
+        Image tmp_image = image.getScaledInstance(600, 400, java.awt.Image.SCALE_SMOOTH);
+        logo = new ImageIcon(tmp_image);
+        JLabel logoLabel = new JLabel(logo);
+        logoLabel.setBounds((WINDOW_WIDTH-600) / 2, 0, 600, 400);
         startButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
+                playername = nameField.getText();
                 panel.setVisible(false);
+                frame.remove(panel);
+                frame.remove(logoLabel);
+                frame.setLayout(new BorderLayout());
                 gameStarted = true;
             }
         });
         // The button is placed into a panel
-        panel.setBounds(100,300,200,200);
-//        panel.add(label);
-//        panel.add(nameField);
+        panel.setBounds((WINDOW_WIDTH-300)/2,(WINDOW_HEIGHT)/2,300,100);
+        panel.add(nameInfo);
+        panel.add(nameField);
         panel.add(startButton);
+        panel.setBackground(Color.BLACK);
+
+        frame.getContentPane().setBackground(Color.BLACK);
+        frame.getContentPane().setLayout(null);
+        frame.getContentPane().add(logoLabel);
         frame.setVisible(true);
 
     }
@@ -112,11 +130,12 @@ public class App {
             scoresList.append(str + "\n");
         }
 
-        frame.getContentPane().setLayout(null);
+        frame.setLayout(null);
         frame.getContentPane().setBackground(Color.BLACK);
         frame.getContentPane().add(label);
         frame.getContentPane().add(scoresList);
         frame.setVisible(true);
+        frame.repaint();
     }
 
     /**
@@ -182,7 +201,7 @@ public class App {
             for (int i = 0; i < lines.size(); i++) {
                 String line = lines.get(i);
                 String[] elements = line.split(" ");
-                scores.add((i + 1) + ". " + elements[1] + ", " + elements[0]);
+                scores.add((i + 1) + ". " + elements[1] + "- " + elements[0]);
             }
         } catch (IOException e) {
             e.printStackTrace();

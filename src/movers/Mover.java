@@ -126,13 +126,11 @@ public abstract class Mover implements Runnable{
             if (nextPosX == 0 & dir == Direction.WEST) {
                 this.setTile(27, 14);
                 this.dir = Direction.WEST;
-                System.out.print("teleport left");
                 return true;
             }
             else if (nextPosX == 27 & dir == Direction.EAST) {
                 this.setTile(0, 14);
                 this.dir = Direction.EAST;
-                System.out.print("teleport right");
                 return true;
             }
         }
