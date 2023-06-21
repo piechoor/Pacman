@@ -91,8 +91,7 @@ public class Game extends JFrame implements KeyListener{
                 Ghost ghost = (Ghost) mover;
                 if (player.getTile()[0] == ghost.getTile()[0] && player.getTile()[1] == ghost.getTile()[1]) {
                     player.lives--;
-                    if (player.lives != 0)
-                        map.setMapRebuild();
+                    map.setMapRebuild();
                     break;
                 }
             }
