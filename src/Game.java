@@ -2,7 +2,6 @@ import game_map.Map;
 import movers.Ghost;
 import movers.Mover;
 import movers.Player;
-import movers.RedGhost;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -10,27 +9,25 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ *  Class representing pacman game in sense of its mechanics.
+ */
 public class Game extends JFrame implements KeyListener{
-    private Map map;
+    private final Map map;
     private Player player;
-    private List<Mover> movers;
-    private JFrame frame;
-    private int score;
+    private final List<Mover> movers;
     private volatile boolean gameFinished = false;
 
     public Game(Map game_map, JFrame game_frame){
         map = game_map;
-        score = 0;
 
         movers = map.getMovers();
         for (Mover mover : movers) { //extracts player from all movers
             if (mover instanceof Player)
                 player = (Player) mover;
         }
-        frame = game_frame;
-        frame.addKeyListener(this);
-        frame.requestFocus();
+        game_frame.addKeyListener(this);
+        game_frame.requestFocus();
     }
 
     /**
@@ -48,28 +45,9 @@ public class Game extends JFrame implements KeyListener{
             case 27 -> gameFinished = true;
         }
     }
-   /*public void moveMovers() {
-        player.move();
-        //move ghosts
-        moveGhosts();
-        map.repaint();
-    }
-
-    private boolean moveGhosts() {
-        for (Mover mover : movers) {
-            if (mover instanceof Ghost) {
-                Ghost ghost = (Ghost) mover;
-                int[] posT = ghost.getTile();
-                if (ghost.teleport(posT[0], posT[1]))
-                    return true;
-                ghost.move();
-            }
-        }
-        return true;
-    }*/
 
     /**
-     * Game loop
+     * Main game loop, runs threads, manages them and returns player's score after a ghost killed them.
      */
     public int play() {
             List<Thread> threads = new ArrayList<>();
@@ -101,52 +79,6 @@ public class Game extends JFrame implements KeyListener{
                     gameFinished = true;
                 allFoodEaten();
             }
-            /*for (Mover mover : movers) {
-                Thread thread = new Thread(() -> {
-                        while (!gameFinished) {
-                            synchronized (mover) {
-                                mover.move();
-                                *//*isCollision();*//*
-                                allFoodEaten();
-                                if (mover instanceof Ghost) {
-                                    Ghost ghost = (Ghost) mover;
-                                    if (player.isCollision(ghost)) {
-                                        if (player.lives > 0) {
-                                            player.lives--;
-                                            //return movers to start position
-                                            map.setMapRebuild();
-                                        }
-                                        if (player.lives == 0) {
-                                            gameFinished = true;
-                                        }
-                                        try {
-                                            mover.wait();
-                                        } catch (InterruptedException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                });
-                threads.add(thread);
-                thread.start();
-            }
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        synchronized (movers) {
-            movers.notifyAll();
-        }
-            for (Thread thread : threads) {
-                try {
-                    thread.join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }*/
         return player.getScore();
     }
 

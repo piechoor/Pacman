@@ -1,7 +1,5 @@
 package movers;
 
-import game_map.Map;
-
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
@@ -54,12 +52,6 @@ public class RedGhost extends Ghost {
     @Override
     public void paint(Graphics2D g2d, int posX, int posY) {
 
-        /*double angle = switch (dir) {  //sets correct angle for the chosen direction
-            case NORTH -> -Math.PI/2;
-            case WEST -> Math.PI;
-            case SOUTH -> Math.PI/2;
-            case EAST -> 0.0;
-        };  */      // transforms icon on the map
         transform = new AffineTransform();
         transform.rotate(0.0, posX+(double) icon.getIconWidth()/2, posY+(double) icon.getIconHeight()/2);
         transform.translate(posX, posY);

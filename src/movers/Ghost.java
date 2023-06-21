@@ -2,8 +2,6 @@ package movers;
 
 import game_map.Map;
 
-import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,18 +71,6 @@ public abstract class Ghost extends Mover {
     public void move() {
         if (teleport(this.getTile()[0], this.getTile()[1]))
             return;
-        /*if (inHouse) {
-            if (getTileInFrontOfPlayer(this.getTile(), this.getDirection(), 1)[1] == 10) {
-                if (getTileInFrontOfPlayer(this.getTile(), this.getDirection(), 1)[0] == 13) {
-                    this.setTile(13, 11);
-                    inHouse = false;
-                }
-                else if (getTileInFrontOfPlayer(this.getTile(), this.getDirection(), 1)[0] == 14) {
-                    this.setTile(14, 11);
-                    inHouse = false;
-                }
-            }
-        }*/
         int[] currentTile = getTile();
         if (isIntersection(currentTile)) {
             Direction newDirection = chooseDirection(currentTile);
@@ -195,22 +181,10 @@ public abstract class Ghost extends Mover {
     private int[] getTileInDirection(int[] tile, Direction direction) {
         int[] nextTile = tile.clone();
         switch (direction) {
-            case NORTH -> {
-                nextTile[1] -= 1;
-                break;
-            }
-            case SOUTH -> {
-                nextTile[1] += 1;
-                break;
-            }
-            case WEST -> {
-                nextTile[0] -= 1;
-                break;
-            }
-            case EAST -> {
-                nextTile[0] += 1;
-                break;
-            }
+            case NORTH -> nextTile[1] -= 1;
+            case SOUTH -> nextTile[1] += 1;
+            case WEST -> nextTile[0] -= 1;
+            case EAST -> nextTile[0] += 1;
         }
         return nextTile;
     }
@@ -234,21 +208,16 @@ public abstract class Ghost extends Mover {
      */
     private Direction getOppositeDirection(Direction current) {
         switch (current) {
-            case NORTH -> {
+            case NORTH:
                 return Direction.SOUTH;
-            }
-            case SOUTH -> {
+            case SOUTH:
                 return Direction.NORTH;
-            }
-            case WEST -> {
+            case WEST:
                 return Direction.EAST;
-            }
-            case EAST -> {
+            case EAST:
                 return Direction.WEST;
-            }
-            default -> {
+            default:
                 return current;
-            }
         }
     }
 
@@ -260,31 +229,22 @@ public abstract class Ghost extends Mover {
 
         switch (getDirection()) {
             case NORTH -> {
-                /*position[1] -= iconH;*/
                 animateWalk(0, -1, map);
                 this.setTile(position[0], position[1] - 1);
-                break;
             }
             case SOUTH -> {
-                /*position[1] += iconH;*/
                 animateWalk(0, 1, map);
                 this.setTile(position[0], position[1] + 1);
-                break;
             }
             case WEST -> {
-                /*position[0] -= iconW;*/
                 animateWalk(-1, 0, map);
                 this.setTile(position[0] - 1, position[1]);
-                break;
             }
             case EAST -> {
-                /*position[0] += iconW;*/
                 animateWalk(1, 0, map);
                 this.setTile(position[0] + 1, position[1]);
-                break;
             }
         }
-        //setPosition(position[0], position[1]);
     }
 
     /**
@@ -297,22 +257,10 @@ public abstract class Ghost extends Mover {
     protected int[] getTileInFrontOfPlayer(int[] playerTile, Direction playerDir, int dist) {
         int[] targetTile = playerTile.clone();
         switch (playerDir) {
-            case NORTH -> {
-                targetTile[1] -= dist;
-                break;
-            }
-            case SOUTH -> {
-                targetTile[1] += dist;
-                break;
-            }
-            case WEST -> {
-                targetTile[0] -= dist;
-                break;
-            }
-            case EAST -> {
-                targetTile[0] += dist;
-                break;
-            }
+            case NORTH -> targetTile[1] -= dist;
+            case SOUTH -> targetTile[1] += dist;
+            case WEST -> targetTile[0] -= dist;
+            case EAST -> targetTile[0] += dist;
         }
         return targetTile;
     }
@@ -331,26 +279,4 @@ public abstract class Ghost extends Mover {
     public void setHouse() {
         this.inHouse = true;
     }
-    /*
-    /**
-     * Paints ghost on the screen with proper rotation.
-     * @param g2d graphics 2D
-     * @param posX x position
-     * @param posY y position
-    @Override
-    public void paint(Graphics2D g2d, int posX, int posY) {
-
-        double angle = switch (dir) {  //sets correct angle for the chosen direction
-            case NORTH -> -Math.PI/2;
-            case WEST -> Math.PI;
-            case SOUTH -> Math.PI/2;
-            case EAST -> 0.0;
-        };
-
-        // transforms icon on the map
-        transform = new AffineTransform();
-        transform.rotate(angle, posX+(double) icon.getIconWidth()/2, posY+(double) icon.getIconHeight()/2);
-        transform.translate(posX, posY);
-        g2d.drawImage(icon.getImage(), transform, null);
-    }*/
 }
