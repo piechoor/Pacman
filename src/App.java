@@ -2,11 +2,8 @@ import game_map.Map;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.awt.event.*;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,7 +11,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Main program's class managing overall app functionalities.
@@ -25,7 +21,7 @@ public class App {
     private static JPanel panel;
     private static Map map;
     private static Game game;
-    private static String scoresFile = "scores.txt";
+    private static final String scoresFile = "scores.txt";
     private static String playername = "Guest";
     private static boolean gameStarted = false;
     private static final int WINDOW_WIDTH = 650, WINDOW_HEIGHT = 650;
@@ -33,7 +29,7 @@ public class App {
     /**
      * A constructor prepares and configures basic app elements.
      */
-    App() {
+    public static void initApp() {
         frame = new JFrame("Pacman");
         panel = new JPanel();
         frame.add(panel);
@@ -43,7 +39,7 @@ public class App {
         frame.setVisible(true);
         frame.setLocationRelativeTo(null);
 
-        setIcon("imgs/pacman_icon.png");
+        setIcon();
     }
 
     /**
@@ -51,8 +47,9 @@ public class App {
      */
     public static void main(String[] args) {
 
-        App app = new App();
-        app.openStartScreen();
+        initApp();
+        openStartScreen();
+
         waitForStart();
         createMap();
         game = new Game(map, frame);
@@ -61,7 +58,7 @@ public class App {
         openEndScreen();
         try {
             Thread.sleep(30000);
-        } catch (InterruptedException e) {
+       } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
@@ -81,15 +78,14 @@ public class App {
         logo = new ImageIcon(tmp_image);
         JLabel logoLabel = new JLabel(logo);
         logoLabel.setBounds((WINDOW_WIDTH-600) / 2, 0, 600, 400);
-        startButton.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){
-                playername = nameField.getText();
-                panel.setVisible(false);
-                frame.remove(panel);
-                frame.remove(logoLabel);
-                frame.setLayout(new BorderLayout());
-                gameStarted = true;
-            }
+
+        startButton.addActionListener(e -> {
+            playername = nameField.getText();
+            panel.setVisible(false);
+            frame.remove(panel);
+            frame.remove(logoLabel);
+            frame.setLayout(new BorderLayout());
+            gameStarted = true;
         });
         // The button is placed into a panel
         panel.setBounds((WINDOW_WIDTH-300)/2,(WINDOW_HEIGHT)/2,300,100);
@@ -149,11 +145,10 @@ public class App {
 
     /**
      * Sets the program icon from a given path.
-     * @param path relative image path
      */
-    private static void setIcon(String path) {
+    private static void setIcon() {
 
-        String absolutePath = new File(path).getAbsolutePath();
+        String absolutePath = new File("imgs/pacman_icon.png").getAbsolutePath();
         ImageIcon icon = new ImageIcon(absolutePath);
         frame.setIconImage(icon.getImage());
     }

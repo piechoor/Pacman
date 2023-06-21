@@ -11,6 +11,13 @@ public class MapTile {
     private final int width, height;
     private final Graphics2D g2d;
 
+    /**
+     * Creates map tile with given parameters
+     * @param objColor color of the rectangle
+     * @param objWidth tile width
+     * @param objHeight tile height
+     * @param graphics graphics used to tile displaying
+     */
     public MapTile(Color objColor, int objWidth, int objHeight, Graphics2D graphics) {
 
         color = objColor;

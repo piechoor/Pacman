@@ -15,7 +15,8 @@ import java.util.List;
 public class Map extends JComponent {
 
     private final int width, height;  //map dimensions
-    private int tilesWidth, tilesHeight;  //max object dimensions
+    private final int tilesWidth;
+    private final int tilesHeight;
     private Graphics2D g2d;
 
     private final int[][] map =  // Represents game map [31x28]: 0=path; 1=wall; 2=outside, 5=pacman;
@@ -56,7 +57,6 @@ public class Map extends JComponent {
     ImageIcon mapImage;
     AffineTransform mapTransform = new AffineTransform();
     volatile Player player;
-    //list of ghosts
     volatile RedGhost redGhost;
     PinkGhost pinkGhost;
     BlueGhost blueGhost;
@@ -90,7 +90,7 @@ public class Map extends JComponent {
         movers.add(blueGhost);
         movers.add(orangeGhost);
 
-        // prepares map theme
+        // prepa91res map theme
         mapImage = new ImageIcon(new File("imgs/pacman_map.png").getAbsolutePath());
         Image image = mapImage.getImage();  //scaling image
         Image tmp_image = image.getScaledInstance(635, 615,  java.awt.Image.SCALE_SMOOTH);

@@ -10,7 +10,7 @@ import java.io.File;
 /**
  * Class represents pacman - player's character
  */
-public class Player extends Mover{
+public class Player extends Mover {
     protected Map map;
     public int lives = 3;
     private int score = 0;
@@ -21,6 +21,11 @@ public class Player extends Mover{
         setTile(14,23);
         setIcon("imgs/pacman_icon.png");
     }
+
+    /**
+     * Sets map on which player is
+     * @param map game's map
+     */
     public void setMap(Map map) {
         this.map = map;
     }
@@ -127,6 +132,10 @@ public class Player extends Mover{
         }
     }
 
+    /**
+     * Changes player's icon depending on a state given. Used for pacman animation.
+     * @param state either "close" or "open"
+     */
     private void changeIcon(String state) {
         String absolutePath = "";
 
@@ -141,6 +150,10 @@ public class Player extends Mover{
         Image tmp_image = image.getScaledInstance(23, 21,  java.awt.Image.SCALE_SMOOTH);
         this.icon = new ImageIcon(tmp_image);
     }
+
+    /**
+     * @return player score
+     */
     public int getScore() {
         return score;
     }
