@@ -150,6 +150,9 @@ public class Game extends JFrame implements KeyListener{
         return player.getScore();
     }
 
+    /**
+     * Checks for player collision with ghosts
+     */
     private void isCollision() {
         for (Mover mover : movers) {
             if (mover instanceof Ghost) {
@@ -163,6 +166,9 @@ public class Game extends JFrame implements KeyListener{
         }
     }
 
+    /**
+     * Checks for all food eaten on map
+     */
     private void allFoodEaten() {
         if (map.allFoodEaten())
             gameFinished = true;

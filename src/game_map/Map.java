@@ -206,6 +206,10 @@ public class Map extends JComponent {
         return movers;
     }
 
+    /**
+     * Returns map
+     * @return map of the game
+     */
     public int[][] getMap() {
         return this.map;
     }
@@ -220,6 +224,9 @@ public class Map extends JComponent {
         return true;
     }
 
+    /**
+     * Rebuilds map if player encounters ghosts
+     */
     public void setMapRebuild() {
         for (Mover mover : movers) {
             if (mover instanceof Player) {
@@ -248,7 +255,7 @@ public class Map extends JComponent {
             }
         }
         try {
-            Thread.sleep(300);
+            Thread.sleep(3000);
         }
         catch (InterruptedException e) {
             e.printStackTrace();

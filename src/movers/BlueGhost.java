@@ -3,6 +3,9 @@ package movers;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
+/**
+ * Class represents blue ghost(Inky)
+ */
 public class BlueGhost extends Ghost{
     RedGhost redGhost;
     public BlueGhost(int width, int height, Player player, RedGhost redGhost) {
@@ -13,12 +16,18 @@ public class BlueGhost extends Ghost{
         this.redGhost = redGhost;
     }
 
+    /**
+     * Function move for Inky
+     */
     @Override
     public void move() {
         updateTarget();
         super.move();
     }
 
+    /**
+     * Update target for Inky
+     */
     @Override
     protected void updateTarget() {
         if (inHouse) {
@@ -33,6 +42,10 @@ public class BlueGhost extends Ghost{
             setTarget(targetTile);
         }
     }
+
+    /**
+     * Update Inky's target for scared mode
+     */
     @Override
     protected void updateScaredModeTarget() {
         setScaredTarget(new int[]{MAP_HEIGHT - 1, MAP_WIDTH - 1});

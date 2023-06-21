@@ -3,6 +3,9 @@ package movers;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
+/**
+ * Class represents pink ghost(Pinky)
+ */
 public class PinkGhost extends Ghost {
     public PinkGhost(int width, int height, Player player) {
         super(width, height, player);
@@ -11,12 +14,18 @@ public class PinkGhost extends Ghost {
         dir = Direction.WEST;
     }
 
+    /**
+     * Function move for Pinky
+     */
     @Override
     public void move() {
         updateTarget();
         super.move();
     }
 
+    /**
+     * Update target for Pinky
+     */
     @Override
     protected void updateTarget() {
         if (inHouse) {
@@ -30,6 +39,9 @@ public class PinkGhost extends Ghost {
         }
     }
 
+    /**
+     * Updates Pinky's target for scared mode
+     */
     @Override
     protected void updateScaredModeTarget() {
         setScaredTarget(new int[]{0, 0});

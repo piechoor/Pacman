@@ -5,6 +5,9 @@ import game_map.Map;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
+/**
+ * Class to represent red ghost (Blinky)
+ */
 public class RedGhost extends Ghost {
     public RedGhost(int width, int height, Player player) {
         super(width, height, player);
@@ -13,12 +16,18 @@ public class RedGhost extends Ghost {
         dir = Direction.WEST;
     }
 
+    /**
+     * Function move for Blinky
+     */
     @Override
     public void move() {
         updateTarget();
         super.move();
     }
 
+    /**
+     * Updates target for Blinky
+     */
     @Override
     protected void updateTarget() {
         if (inHouse) {
@@ -28,6 +37,10 @@ public class RedGhost extends Ghost {
         else
             setTarget(player.getTile());
     }
+
+    /**
+     * Updates Blinky's target for scared mode
+     */
     @Override
     protected void updateScaredModeTarget() {
         setScaredTarget(new int[]{0, MAP_WIDTH - 1});

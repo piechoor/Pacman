@@ -3,6 +3,9 @@ package movers;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
+/**
+ * class represents orange ghost(Clyde)
+ */
 public class OrangeGhost extends Ghost{
     public OrangeGhost(int width, int height, Player player) {
         super(width, height, player);
@@ -11,12 +14,18 @@ public class OrangeGhost extends Ghost{
         dir = Direction.WEST;
     }
 
+    /**
+     * Function move for Clyde
+     */
     @Override
     public void move() {
         updateTarget();
         super.move();
     }
 
+    /**
+     * Updates target for Clyde
+     */
     @Override
     protected void updateTarget() {
         if (inHouse) {
@@ -32,6 +41,10 @@ public class OrangeGhost extends Ghost{
             }
         }
     }
+
+    /**
+     * Updates Clyde's target for scared mode
+     */
     @Override
     protected void updateScaredModeTarget() {
         setScaredTarget(new int[]{0, MAP_HEIGHT - 1});
