@@ -12,6 +12,7 @@ import java.io.File;
  */
 public class Player extends Mover{
     protected Map map;
+    public int lives = 3;
     private int score = 0;
     public Player(int width, int height) {
         iconW = width;
@@ -115,7 +116,7 @@ public class Player extends Mover{
             for (int i = 0; i < map.tileH; i++) {
                 this.setPosition(pos[0], pos[1] + (i * ver));
                 if (i==0) this.changeIcon("close");
-                if (i==(int) map.tileW/2) this.changeIcon("open");
+                if (i==(int) map.tileH/2) this.changeIcon("open");
                 try {
                     Thread.sleep(8);
                 } catch (InterruptedException e) {
@@ -126,7 +127,7 @@ public class Player extends Mover{
         }
     }
 
-    public void changeIcon(String state) {
+    private void changeIcon(String state) {
         String absolutePath = "";
 
         if (state == "open")

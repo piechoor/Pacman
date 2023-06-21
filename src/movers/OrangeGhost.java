@@ -19,11 +19,17 @@ public class OrangeGhost extends Ghost{
 
     @Override
     protected void updateTarget() {
-        if (getDistance(player.getTile(), this.getTile()) > 64) {
-            setTarget(player.getTile());
+        if (inHouse) {
+            setTarget(new int[]{13, 11});
+            checkHome();
         }
         else {
-            setTarget(new int[]{0, MAP_HEIGHT -1});
+            if (getDistance(player.getTile(), this.getTile()) > 64) {
+                setTarget(player.getTile());
+            }
+            else {
+                setTarget(new int[]{0, MAP_HEIGHT -1});
+            }
         }
     }
     @Override

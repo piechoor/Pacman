@@ -152,7 +152,7 @@ public abstract class Mover implements Runnable{
     }
 
     @Override
-    public void run() {
+    public synchronized void run() {
         move();
     }
     public abstract void move();

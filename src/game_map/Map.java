@@ -31,7 +31,7 @@ public class Map extends JComponent {
             { 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
             { 2, 2, 2, 2, 2, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 2, 2, 2, 2, 2 },
             { 2, 2, 2, 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 2, 2, 2, 2, 2 },
-            { 2, 2, 2, 2, 2, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 2, 2, 2, 2, 2 },
+            { 2, 2, 2, 2, 2, 1, 0, 1, 1, 0, 1, 1, 1, 3, 3, 1, 1, 1, 0, 1, 1, 0, 1, 2, 2, 2, 2, 2 },
             { 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
             { 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
             { 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 },
@@ -220,4 +220,38 @@ public class Map extends JComponent {
         return true;
     }
 
+    public void setMapRebuild() {
+        for (Mover mover : movers) {
+            if (mover instanceof Player) {
+                mover.setTile(14,23);
+                mover.setDirection(Mover.Direction.WEST);
+            }
+            if (mover instanceof RedGhost) {
+                mover.setTile(15, 13);
+                Ghost ghost = (Ghost) mover;
+                ghost.setHouse();
+            }
+            if (mover instanceof OrangeGhost) {
+                mover.setTile(11, 13);
+                Ghost ghost = (Ghost) mover;
+                ghost.setHouse();
+            }
+            if (mover instanceof PinkGhost) {
+                mover.setTile(15, 14);
+                Ghost ghost = (Ghost) mover;
+                ghost.setHouse();
+            }
+            if (mover instanceof BlueGhost) {
+                mover.setTile(11, 14);
+                Ghost ghost = (Ghost) mover;
+                ghost.setHouse();
+            }
+        }
+        try {
+            Thread.sleep(300);
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }

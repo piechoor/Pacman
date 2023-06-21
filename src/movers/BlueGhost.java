@@ -21,11 +21,17 @@ public class BlueGhost extends Ghost{
 
     @Override
     protected void updateTarget() {
-        int[] playerTile = player.getTile();
-        int[] redGhostTile = redGhost.getTile();
-        playerTile = getTileInFrontOfPlayer(playerTile, player.getDirection(), 2);
-        int[] targetTile = calculateBlueGhostTarget(playerTile, redGhostTile);
-        setTarget(targetTile);
+        if (inHouse) {
+            setTarget(new int[]{13, 11});
+            checkHome();
+        }
+        else {
+            int[] playerTile = player.getTile();
+            int[] redGhostTile = redGhost.getTile();
+            playerTile = getTileInFrontOfPlayer(playerTile, player.getDirection(), 2);
+            int[] targetTile = calculateBlueGhostTarget(playerTile, redGhostTile);
+            setTarget(targetTile);
+        }
     }
     @Override
     protected void updateScaredModeTarget() {

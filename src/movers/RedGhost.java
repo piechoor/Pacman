@@ -21,7 +21,12 @@ public class RedGhost extends Ghost {
 
     @Override
     protected void updateTarget() {
-        setTarget(player.getTile());
+        if (inHouse) {
+            setTarget(new int[]{13, 11});
+            checkHome();
+        }
+        else
+            setTarget(player.getTile());
     }
     @Override
     protected void updateScaredModeTarget() {

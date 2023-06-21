@@ -72,37 +72,81 @@ public class Game extends JFrame implements KeyListener{
      * Game loop
      */
     public int play() {
-        List<Thread> threads = new ArrayList<>();
-        for (Mover mover : movers) {
-            if (mover instanceof Ghost) {
-                Ghost ghost = (Ghost) mover;
-                ghost.setMap(map);
+            List<Thread> threads = new ArrayList<>();
+            for (Mover mover : movers) {
+                if (mover instanceof Ghost) {
+                    Ghost ghost = (Ghost) mover;
+                    ghost.setMap(map);
+                }
+                if (mover instanceof Player) {
+                    Player player = (Player) mover;
+                    player.setMap(map);
+                }
             }
-            if (mover instanceof Player) {
-                Player player = (Player) mover;
-                player.setMap(map);
+            while(!gameFinished || player.lives > 0) {
+                for (Mover mover : movers) {
+                    Thread thread = new Thread(mover);
+                    thread.start();
+                    threads.add(thread);
+                }
+                try {
+                    for (Thread thread : threads) {
+                        thread.join();
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                isCollision();
+                if (player.lives == 0)
+                    gameFinished = true;
+                allFoodEaten();
             }
+            /*for (Mover mover : movers) {
+                Thread thread = new Thread(() -> {
+                        while (!gameFinished) {
+                            synchronized (mover) {
+                                mover.move();
+                                *//*isCollision();*//*
+                                allFoodEaten();
+                                if (mover instanceof Ghost) {
+                                    Ghost ghost = (Ghost) mover;
+                                    if (player.isCollision(ghost)) {
+                                        if (player.lives > 0) {
+                                            player.lives--;
+                                            //return movers to start position
+                                            map.setMapRebuild();
+                                        }
+                                        if (player.lives == 0) {
+                                            gameFinished = true;
+                                        }
+                                        try {
+                                            mover.wait();
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                });
+                threads.add(thread);
+                thread.start();
+            }
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        for (Mover mover: movers) {
-            Thread thread = new Thread(() -> {
-               while (!gameFinished) {
-                   mover.move();
-                   isCollision();
-                   allFoodEaten();
-               }
-
-            });
-            threads.add(thread);
-            thread.start();
+        synchronized (movers) {
+            movers.notifyAll();
         }
-        for (Thread thread : threads) {
-            try {
-                thread.join();
-            }
-            catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+            for (Thread thread : threads) {
+                try {
+                    thread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }*/
         return player.getScore();
     }
 
@@ -110,8 +154,11 @@ public class Game extends JFrame implements KeyListener{
         for (Mover mover : movers) {
             if (mover instanceof Ghost) {
                 Ghost ghost = (Ghost) mover;
-                if (player.getTile()[0] == ghost.getTile()[0] && player.getTile()[1] == ghost.getTile()[1])
-                    gameFinished = true;
+                if (player.getTile()[0] == ghost.getTile()[0] && player.getTile()[1] == ghost.getTile()[1]) {
+                    player.lives--;
+                    map.setMapRebuild();
+                    break;
+                }
             }
         }
     }

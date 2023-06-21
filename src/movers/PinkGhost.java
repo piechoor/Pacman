@@ -19,9 +19,15 @@ public class PinkGhost extends Ghost {
 
     @Override
     protected void updateTarget() {
-        int[] playerTile = player.getTile();
-        int[] targetTile = getTileInFrontOfPlayer(playerTile, player.getDirection(), 4);
-        setTarget(targetTile);
+        if (inHouse) {
+            setTarget(new int[]{13, 11});
+            checkHome();
+        }
+        else {
+            int[] playerTile = player.getTile();
+            int[] targetTile = getTileInFrontOfPlayer(playerTile, player.getDirection(), 4);
+            setTarget(targetTile);
+        }
     }
 
     @Override

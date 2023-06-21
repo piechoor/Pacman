@@ -38,9 +38,21 @@ public abstract class Ghost extends Mover {
     protected void setScaredTarget(int[] ScaredTarget) {
         this.Target = ScaredTarget;
     }
-    public synchronized void move() {
+    public void move() {
         if (teleport(this.getTile()[0], this.getTile()[1]))
             return;
+        /*if (inHouse) {
+            if (getTileInFrontOfPlayer(this.getTile(), this.getDirection(), 1)[1] == 10) {
+                if (getTileInFrontOfPlayer(this.getTile(), this.getDirection(), 1)[0] == 13) {
+                    this.setTile(13, 11);
+                    inHouse = false;
+                }
+                else if (getTileInFrontOfPlayer(this.getTile(), this.getDirection(), 1)[0] == 14) {
+                    this.setTile(14, 11);
+                    inHouse = false;
+                }
+            }
+        }*/
         int[] currentTile = getTile();
         if (isIntersection(currentTile)) {
             Direction newDirection = chooseDirection(currentTile);
@@ -49,7 +61,7 @@ public abstract class Ghost extends Mover {
         moveDirection();
 
     }
-    private synchronized boolean isIntersection(int[] tile) {
+    private boolean isIntersection(int[] tile) {
         int upTile = tile[1] - 1;
         int downTile = tile[1] + 1;
         int leftTile = tile[0] - 1;
@@ -73,11 +85,11 @@ public abstract class Ghost extends Mover {
         }
         return validDirections >= 3;
     }
-    private synchronized boolean isValidTile(int row, int column) {
-        return row >= 0 && row < MAP_HEIGHT && column < MAP_WIDTH  && column >= 0 && map.getMap()[row][column] != 1;
+    private boolean isValidTile(int row, int column) {
+        return row >= 0 && row < MAP_HEIGHT && column < MAP_WIDTH  && column >= 0 && (map.getMap()[row][column] != 1 || (inHouse && map.getMap()[row][column] == 3));
     }
 
-    private synchronized Direction chooseDirection(int[] tile) {
+    private Direction chooseDirection(int[] tile) {
         List<Direction> directions = new ArrayList<>();
         Direction currentDirection = getDirection();
         Direction oppositeDirection = getOppositeDirection(currentDirection);
@@ -124,7 +136,7 @@ public abstract class Ghost extends Mover {
         return best;
     }
 
-    private synchronized int[] getTileInDirection(int[] tile, Direction direction) {
+    private int[] getTileInDirection(int[] tile, Direction direction) {
         int[] nextTile = tile.clone();
         switch (direction) {
             case NORTH -> {
@@ -147,13 +159,13 @@ public abstract class Ghost extends Mover {
         return nextTile;
     }
 
-    protected synchronized int getDistance(int[] tile1, int[] tile2) {
+    protected int getDistance(int[] tile1, int[] tile2) {
         int dx = tile1[0] - tile2[0];
         int dy = tile1[1] - tile2[1];
         return dx * dx + dy * dy;
     }
 
-    private synchronized Direction getOppositeDirection(Direction current) {
+    private Direction getOppositeDirection(Direction current) {
         switch (current) {
             case NORTH -> {
                 return Direction.SOUTH;
@@ -173,7 +185,7 @@ public abstract class Ghost extends Mover {
         }
     }
 
-    private synchronized void moveDirection() {
+    private void moveDirection() {
         int[] position = getTile();
 
         switch (getDirection()) {
@@ -205,7 +217,7 @@ public abstract class Ghost extends Mover {
         //setPosition(position[0], position[1]);
     }
 
-    protected synchronized int[] getTileInFrontOfPlayer(int[] playerTile, Direction playerDir, int dist) {
+    protected int[] getTileInFrontOfPlayer(int[] playerTile, Direction playerDir, int dist) {
         int[] targetTile = playerTile.clone();
         switch (playerDir) {
             case NORTH -> {
@@ -226,6 +238,15 @@ public abstract class Ghost extends Mover {
             }
         }
         return targetTile;
+    }
+
+    protected void checkHome() {
+        if (this.getTile()[0] == 13 && this.getTile()[1] == 11)
+            this.inHouse = false;
+    }
+
+    public void setHouse() {
+        this.inHouse = true;
     }
 
     /**
