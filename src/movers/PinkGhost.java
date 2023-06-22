@@ -6,7 +6,7 @@ import java.awt.geom.AffineTransform;
 /**
  * Class represents pink ghost(Pinky)
  */
-public class PinkGhost extends Ghost {
+public class PinkGhost extends Ghost implements Runnable{
     public PinkGhost(int width, int height, Player player) {
         super(width, height, player);
         setIcon("imgs/ghost_pink.png");
@@ -62,6 +62,9 @@ public class PinkGhost extends Ghost {
         transform.translate(posX, posY);
         g2d.drawImage(icon.getImage(), transform, null);
     }
-
+    @Override
+    public void run() {
+        move();
+    }
 }
 

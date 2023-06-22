@@ -6,7 +6,7 @@ import java.awt.geom.AffineTransform;
 /**
  * Class to represent red ghost (Blinky)
  */
-public class RedGhost extends Ghost {
+public class RedGhost extends Ghost implements Runnable{
     public RedGhost(int width, int height, Player player) {
         super(width, height, player);
         setIcon("imgs/ghost_red.png");
@@ -56,5 +56,9 @@ public class RedGhost extends Ghost {
         transform.rotate(0.0, posX+(double) icon.getIconWidth()/2, posY+(double) icon.getIconHeight()/2);
         transform.translate(posX, posY);
         g2d.drawImage(icon.getImage(), transform, null);
+    }
+    @Override
+    public void run() {
+        move();
     }
 }

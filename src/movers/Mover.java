@@ -97,7 +97,7 @@ public abstract class Mover implements Runnable{
             for (int i = 0; i < map.tileW; i++) {
                 this.setPosition(pos[0] + (i * hor), pos[1]);
                 try {
-                    Thread.sleep(8);
+                    Thread.sleep(7);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -108,7 +108,7 @@ public abstract class Mover implements Runnable{
             for (int i = 0; i < map.tileH; i++) {
                 this.setPosition(pos[0], pos[1] + (i * ver));
                 try {
-                    Thread.sleep(8);
+                    Thread.sleep(7);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -151,9 +151,6 @@ public abstract class Mover implements Runnable{
         icon = new ImageIcon(tmp_image);
     }
 
-    @Override
-    public synchronized void run() {
-        move();
-    }
+
     public abstract void move();
 }

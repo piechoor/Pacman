@@ -6,7 +6,7 @@ import java.awt.geom.AffineTransform;
 /**
  * class represents orange ghost(Clyde)
  */
-public class OrangeGhost extends Ghost{
+public class OrangeGhost extends Ghost implements Runnable{
     public OrangeGhost(int width, int height, Player player) {
         super(width, height, player);
         setIcon("imgs/ghost_orange.png");
@@ -63,5 +63,8 @@ public class OrangeGhost extends Ghost{
         transform.translate(posX, posY);
         g2d.drawImage(icon.getImage(), transform, null);
     }
-
+    @Override
+    public void run() {
+        move();
+    }
 }

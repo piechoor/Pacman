@@ -10,7 +10,7 @@ import java.io.File;
 /**
  * Class represents pacman - player's character
  */
-public class Player extends Mover {
+public class Player extends Mover implements Runnable{
     protected Map map;
     public int lives = 3;
     private int score = 0;
@@ -110,7 +110,7 @@ public class Player extends Mover {
                 if (i==0) this.changeIcon("close");
                 if (i==(int) map.tileW/2) this.changeIcon("open");
                 try {
-                    Thread.sleep(8);
+                    Thread.sleep(7);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -123,7 +123,7 @@ public class Player extends Mover {
                 if (i==0) this.changeIcon("close");
                 if (i==(int) map.tileH/2) this.changeIcon("open");
                 try {
-                    Thread.sleep(8);
+                    Thread.sleep(7);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -156,5 +156,10 @@ public class Player extends Mover {
      */
     public int getScore() {
         return score;
+    }
+
+    @Override
+    public void run() {
+        move();
     }
 }

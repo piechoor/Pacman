@@ -6,7 +6,7 @@ import java.awt.geom.AffineTransform;
 /**
  * Class represents blue ghost(Inky)
  */
-public class BlueGhost extends Ghost{
+public class BlueGhost extends Ghost implements Runnable{
     RedGhost redGhost;
     public BlueGhost(int width, int height, Player player, RedGhost redGhost) {
         super(width, height, player);
@@ -71,6 +71,9 @@ public class BlueGhost extends Ghost{
         targetTile[1] = 2 * playerTile[1] - redGhostTile[1];
         return  targetTile;
     }
-
+    @Override
+    public void run() {
+        move();
+    }
 }
 
